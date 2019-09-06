@@ -13,6 +13,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
+from keras.preprocessing.sequence import pad_sequences
 
 
 def has_numbers(input_string):
@@ -65,27 +66,27 @@ test_data_text_cleared = test_data['title'].apply(custom_text_format)
 docs_global = pd.concat([train_data_text_cleared, test_data_text_cleared])
 docs_global = docs_global.reset_index(drop=True)
 
-# data['title_cleaned'] = data['title'].apply(custom_text_format)
 
-# docs = docs_global.apply(custom_text_format)
-
-docs = docs_global
 # create the tokenizer
 t = Tokenizer()
-# fit the tokenizer on the documents
-t.fit_on_texts(docs)
-
+t.fit_on_texts(docs_global)
 
 # summarize what was learned
-# print(t.word_counts)
 print('Test plus Train data documents:')
 print(t.document_count)
-# print(t.word_index)
-# print(t.word_docs)
+
+# Encode Train data
+encoded_seqs = t.texts_to_sequences(train_data_text_cleared)
+print(encoded_seqs)
+
+# Pad Train Data
+# encoded_seqs_pad = pad_sequences(encoded_seqs, max_sentences=None, max_tokens=None, padding="pre", truncating="post", \
+#     value=0.0)
+
+encoded_seqs_pad = pad_sequences(encoded_seqs, maxlen=None, dtype='int32', padding='pre', truncating='pre', value=0.0)
 
 
-encoded_docs = t.texts_to_matrix(train_data_text_cleared, mode='count')
-print(encoded_docs)
+encoded_seqs_pad.shape
 
 #
 # # categories - dummy
@@ -103,14 +104,14 @@ lb_results = lb_style.fit_transform(train_data["category"])
 
 
 print('X Data Size')
-print(encoded_docs.shape)
+print(encoded_seqs.shape)
 print('Y Data Size')
 print(lb_results.shape)
 
 
 # all data (train)
 Y_pre = lb_results
-X_pre = encoded_docs
+X_pre = encoded_seqs
 
 
 x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
