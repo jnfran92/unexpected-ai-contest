@@ -10,6 +10,7 @@ from nltk.corpus import stopwords
 from keras.preprocessing.text import text_to_word_sequence
 from keras.preprocessing.text import Tokenizer
 from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelBinarizer
 
 def has_numbers(input_string):
     return bool(re.search(r'\d', input_string))
@@ -79,7 +80,9 @@ lb_make = LabelEncoder()
 data["category_code"] = lb_make.fit_transform(data["category"])
 
 
-
+# categories - sklearn
+lb_style = LabelBinarizer()
+lb_results = lb_style.fit_transform(data["category"])
 
 
 
