@@ -1,22 +1,19 @@
 
 import re
-import pandas as pd
-import numpy as np
-import keras
 import string
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-from nltk.corpus import stopwords
-from keras.preprocessing.text import text_to_word_sequence
-from keras.preprocessing.text import Tokenizer
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import LabelBinarizer
+
+import numpy as np
+import pandas as pd
+from keras.layers import Dense
 from keras.models import Sequential
-from keras.layers import Dense, Activation
-from keras.layers import Dense, Conv1D, MaxPooling1D, Dropout
 from keras.optimizers import *
-from keras.losses import *
-from keras.activations import *
+from keras.preprocessing.text import Tokenizer
+from numpy import argmax
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelBinarizer
+
 
 def has_numbers(input_string):
     return bool(re.search(r'\d', input_string))
@@ -54,7 +51,7 @@ def custom_text_format(text_arg):
 
 
 input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
-data = pd.read_csv(input_path, nrows=300)
+data = pd.read_csv(input_path, nrows=700)
 
 data['title_cleaned'] = data['title'].apply(custom_text_format)
 
@@ -80,10 +77,10 @@ print(encoded_docs)
 # # categories - dummy
 # cats = data['category']
 # pd.get_dummies(data, columns=['category']).head()
-
-# categories - sklearn
-lb_make = LabelEncoder()
-data["category_code"] = lb_make.fit_transform(data["category"])
+#
+# # categories - sklearn
+# lb_make = LabelEncoder()
+# data["category_code"] = lb_make.fit_transform(data["category"])
 
 
 # categories - sklearn
@@ -91,7 +88,9 @@ lb_style = LabelBinarizer()
 lb_results = lb_style.fit_transform(data["category"])
 
 
+print('X Data Size')
 print(encoded_docs.shape)
+print('Y Data Size')
 print(lb_results.shape)
 
 
@@ -104,19 +103,86 @@ x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 
 
 model = Sequential()
-model.add(Dense(1024, activation='relu', input_dim=x_train.shape[1]))
-model.add(Dropout(0.5))
-model.add(Dense(1024, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(y_train.shape[1], activation='sigmoid'))
+model.add(Dense(2048, activation='relu', input_dim=x_train.shape[1]))
+# model.add(Dense(2048, activation='relu'))
+model.add(Dense(y_train.shape[1], activation='softmax'))
 
-model.compile(loss=binary_crossentropy, optimizer='adam', metrics=['accuracy'])
+# model.compile(loss=binary_crossentropy, optimizer='adam', metrics=['accuracy'])
 
-model.fit(x_train, y_train,
-                     validation_data=[x_val, y_val],
-                     epochs=32,
-                     batch_size=32,
-                     verbose=2)
+sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(loss='categorical_crossentropy',
+              optimizer=sgd,
+              metrics=['accuracy'])
+
+# model.fit(x_train, y_train,
+#                      validation_data=[x_val, y_val],
+#                      epochs=1,
+#                      batch_size=16,
+#                      verbose=2)
+
+
+score_all = model.evaluate(X_pre, Y_pre, verbose=0)
+score_all_test = model.evaluate(x_val, y_val, verbose=0)
+print('All data acc: ' + str(score_all[1]))
+print('Val data acc: ' + str(score_all_test[1]))
+
+while score_all[1] <= 0.999:
+    # model.fit(X, Y, epochs=epochs, batch_size=5, verbose=2, callbacks=[tbCallBack])
+    # model.fit(X, Y, epochs=epochs, batch_size=32, verbose=2)
+    model.fit(x_train, y_train,
+                         validation_data=[x_val, y_val],
+                         epochs=1,
+                         batch_size=32,
+                         verbose=2)
+    score_all = model.evaluate(X_pre, Y_pre, verbose=2)
+    score_all_test = model.evaluate(x_val, y_val, verbose=0)
+    print('All data acc: ' + str(score_all[1]))
+    print('Test data acc: ' + str(score_all_test[1]))
+    print('--------------')
+
+
+
+# prediction_all = np.round(model.predict(X_pre))
+
+
+
+
+#
+# score_all = model.evaluate(X_pre, Y_pre, verbose=0)
+# print('Score All')
+# print(score_all[1])
+#
+#
+#
+#
+#
+#
+# print('All Confution matrix:')
+# prediction_all = np.round(model.predict(X_pre))
+# print(confusion_matrix(Y_pre, prediction_all))
+#
+#
+#
+#
+# pred = model.predict(x_train)
+
+# score = model.evaluate(x_test, y_test, batch_size=128)
+
+#
+# print('ROC AUC Score All: ' + str(roc_auc_score(y_val, model.predict(x_val))))
+#
+#
+# print('All data Confution matrix:')
+# prediction_all = np.round(model.predict(X_pre))
+# cm = confusion_matrix(argmax(Y_pre, 1),
+#                        argmax(prediction_all, 1))
+# print(cm)
+#
+# print('Test Confution matrix:')
+# prediction_all2 = np.round(model.predict(x_val))
+# cm_val = confusion_matrix(argmax(y_val, 1),
+#                        argmax(prediction_all2, 1))
+
 
 
 
