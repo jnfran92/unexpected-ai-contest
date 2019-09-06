@@ -50,14 +50,26 @@ def custom_text_format(text_arg):
     return text_fixed.lower()
 
 
-# input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
-input_path = "./train.csv"
-data = pd.read_csv(input_path, nrows=1000)
+input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
+input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
+# input_path = "./train.csv"
 
-data['title_cleaned'] = data['title'].apply(custom_text_format)
+train_data = pd.read_csv(input_path, nrows=500)
 
+test_data = pd.read_csv(input_path_test, nrows=500)
 
-docs = data['title_cleaned']
+train_data_text_cleared = train_data['title'].apply(custom_text_format)
+
+test_data_text_cleared = test_data['title'].apply(custom_text_format)
+
+docs_global = pd.concat([train_data_text_cleared, test_data_text_cleared])
+docs_global = docs_global.reset_index(drop=True)
+
+# data['title_cleaned'] = data['title'].apply(custom_text_format)
+
+# docs = docs_global.apply(custom_text_format)
+
+docs = docs_global
 # create the tokenizer
 t = Tokenizer()
 # fit the tokenizer on the documents
@@ -65,13 +77,14 @@ t.fit_on_texts(docs)
 
 
 # summarize what was learned
-print(t.word_counts)
+# print(t.word_counts)
+print('Test plus Train data documents:')
 print(t.document_count)
 # print(t.word_index)
 # print(t.word_docs)
 
 
-encoded_docs = t.texts_to_matrix(docs, mode='count')
+encoded_docs = t.texts_to_matrix(train_data_text_cleared, mode='count')
 print(encoded_docs)
 
 #
@@ -86,7 +99,7 @@ print(encoded_docs)
 
 # categories - sklearn
 lb_style = LabelBinarizer()
-lb_results = lb_style.fit_transform(data["category"])
+lb_results = lb_style.fit_transform(train_data["category"])
 
 
 print('X Data Size')
@@ -95,7 +108,7 @@ print('Y Data Size')
 print(lb_results.shape)
 
 
-
+# all data (train)
 Y_pre = lb_results
 X_pre = encoded_docs
 
@@ -104,7 +117,7 @@ x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 
 
 model = Sequential()
-model.add(Dense(1024*4, activation='relu', input_dim=x_train.shape[1]))
+model.add(Dense(1024*2, activation='relu', input_dim=x_train.shape[1]))
 # model.add(Dense(2048, activation='relu'))
 model.add(Dense(y_train.shape[1], activation='softmax'))
 
@@ -127,7 +140,9 @@ score_all_test = model.evaluate(x_val, y_val, verbose=0)
 print('All data acc: ' + str(score_all[1]))
 print('Val data acc: ' + str(score_all_test[1]))
 
+counter = 1
 while score_all[1] <= 0.999:
+    print('counter steps: ' + str(counter))
     # model.fit(X, Y, epochs=epochs, batch_size=5, verbose=2, callbacks=[tbCallBack])
     # model.fit(X, Y, epochs=epochs, batch_size=32, verbose=2)
     model.fit(x_train, y_train,
@@ -141,10 +156,52 @@ while score_all[1] <= 0.999:
     print('All data acc: ' + str(score_all[1]))
     print('Val data acc: ' + str(score_all_test[1]))
     print('--------------')
+    counter += 1
 
 
+# Test data
+def get_label_name(index):
+    return lb_style.classes_[index]
 
-# prediction_all = np.round(model.predict(X_pre))
+
+pred = model.predict(X_pre)
+df_pred = pd.DataFrame(argmax(pred, 1))
+df_pred['real'] = argmax(Y_pre, 1)
+
+condition = ((df_pred[0] - df_pred['real']) == 0)
+
+train_data['title_cleared'] = train_data_text_cleared
+train_data['prediction'] = df_pred[0].map(get_label_name)
+train_data['prediction_state'] = condition
+
+
+# Prediction on Test Data
+encoded_docs_test = t.texts_to_matrix(test_data_text_cleared, mode='count')
+pred = model.predict(encoded_docs_test)
+df_pred_val = pd.DataFrame(argmax(pred, 1))
+test_data['prediction'] = df_pred_val.apply(get_label_name)
+
+
+#
+#
+#
+# encoded_docs_test = t.texts_to_matrix(test_data_text_cleared, mode='count')
+# print(encoded_docs)
+#
+#
+# pred = model.predict(x_train)
+# # print(argmax(pred, 1))
+# # print(argmax(y_train, 1))
+# test_data_text_cleared['real_id'] = argmax(y_train, 1)
+# test_data_text_cleared['pred_id'] = argmax(pred, 1)
+#
+#
+#
+# df_pred = pd.DataFrame(argmax(pred, 1))
+# df_pred['real'] = argmax(y_train, 1)
+#
+#
+# # prediction_all = np.round(model.predict(X_pre))
 
 
 
