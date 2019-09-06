@@ -50,8 +50,9 @@ def custom_text_format(text_arg):
     return text_fixed.lower()
 
 
-input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
-data = pd.read_csv(input_path, nrows=700)
+# input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
+input_path = "./train.csv"
+data = pd.read_csv(input_path, nrows=1000)
 
 data['title_cleaned'] = data['title'].apply(custom_text_format)
 
@@ -103,7 +104,7 @@ x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 
 
 model = Sequential()
-model.add(Dense(2048, activation='relu', input_dim=x_train.shape[1]))
+model.add(Dense(1024*4, activation='relu', input_dim=x_train.shape[1]))
 # model.add(Dense(2048, activation='relu'))
 model.add(Dense(y_train.shape[1], activation='softmax'))
 
@@ -134,10 +135,11 @@ while score_all[1] <= 0.999:
                          epochs=1,
                          batch_size=32,
                          verbose=2)
+
     score_all = model.evaluate(X_pre, Y_pre, verbose=2)
     score_all_test = model.evaluate(x_val, y_val, verbose=0)
     print('All data acc: ' + str(score_all[1]))
-    print('Test data acc: ' + str(score_all_test[1]))
+    print('Val data acc: ' + str(score_all_test[1]))
     print('--------------')
 
 
