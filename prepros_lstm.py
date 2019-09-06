@@ -3,14 +3,18 @@ import re
 import string
 
 import numpy as np
+
+np.random.seed(1337) # for reproducibility
+from keras.layers import Conv1D, MaxPooling1D
+from keras.layers import LSTM
+
 import pandas as pd
 from keras.layers import Dense
 from keras.models import Sequential
 from keras.optimizers import *
 from keras.preprocessing.text import Tokenizer
+from sklearn.preprocessing import StandardScaler
 from numpy import argmax
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 from keras.preprocessing.sequence import pad_sequences
@@ -55,9 +59,9 @@ input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
 input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 # input_path = "./train.csv"
 
-train_data = pd.read_csv(input_path, nrows=500)
+train_data = pd.read_csv(input_path, nrows=1500)
 
-test_data = pd.read_csv(input_path_test, nrows=500)
+test_data = pd.read_csv(input_path_test, nrows=1500)
 
 train_data_text_cleared = train_data['title'].apply(custom_text_format)
 
@@ -80,23 +84,15 @@ encoded_seqs = t.texts_to_sequences(train_data_text_cleared)
 print(encoded_seqs)
 
 # Pad Train Data
-# encoded_seqs_pad = pad_sequences(encoded_seqs, max_sentences=None, max_tokens=None, padding="pre", truncating="post", \
-#     value=0.0)
-
 encoded_seqs_pad = pad_sequences(encoded_seqs, maxlen=None, dtype='int32', padding='pre', truncating='pre', value=0.0)
 
+# Scaler
+# scaler = StandardScaler().fit(encoded_seqs_pad)
+# encoded_seqs_pad_scaled = scaler.transform(encoded_seqs_pad)
+encoded_seqs_pad_scaled = encoded_seqs_pad
 
-encoded_seqs_pad.shape
-
-#
-# # categories - dummy
-# cats = data['category']
-# pd.get_dummies(data, columns=['category']).head()
-#
-# # categories - sklearn
-# lb_make = LabelEncoder()
-# data["category_code"] = lb_make.fit_transform(data["category"])
-
+print("Encoded Seqs Shape")
+print(encoded_seqs_pad.shape)
 
 # categories - sklearn
 lb_style = LabelBinarizer()
@@ -104,40 +100,45 @@ lb_results = lb_style.fit_transform(train_data["category"])
 
 
 print('X Data Size')
-print(encoded_seqs.shape)
+print(encoded_seqs_pad_scaled.shape)
 print('Y Data Size')
 print(lb_results.shape)
 
+shape_encoded = encoded_seqs_pad_scaled.shape
 
 # all data (train)
 Y_pre = lb_results
-X_pre = encoded_seqs
+X_pre = encoded_seqs_pad_scaled.reshape([shape_encoded[0], shape_encoded[1], 1])
 
-
+# Split Data
 x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 
-
+# Create model
 model = Sequential()
-model.add(Dense(1024*2, activation='relu', input_dim=x_train.shape[1]))
-# model.add(Dense(2048, activation='relu'))
+model.add(
+    Conv1D(filters=64, kernel_size=8, padding='causal', activation='relu',
+           input_shape=(x_train.shape[1], x_train.shape[2])))
+model.add(MaxPooling1D(pool_size=2))
+
+# model.add(
+#     Conv1D(filters=8, kernel_size=4, padding='causal', activation='relu'))
+# model.add(MaxPooling1D(pool_size=2))
+
+model.add(LSTM(128))
 model.add(Dense(y_train.shape[1], activation='softmax'))
 
-# model.compile(loss=binary_crossentropy, optimizer='adam', metrics=['accuracy'])
 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy',
               optimizer=sgd,
               metrics=['accuracy'])
 
-# model.fit(x_train, y_train,
-#                      validation_data=[x_val, y_val],
-#                      epochs=1,
-#                      batch_size=16,
-#                      verbose=2)
-
+print(model.summary())
 
 score_all = model.evaluate(X_pre, Y_pre, verbose=0)
 score_all_test = model.evaluate(x_val, y_val, verbose=0)
+# print('All data acc: ' + str(score_all[1]))
+# print('Val data acc: ' + str(score_all_test[1]))
 print('All data acc: ' + str(score_all[1]))
 print('Val data acc: ' + str(score_all_test[1]))
 
@@ -149,7 +150,7 @@ while score_all[1] <= 0.999:
     model.fit(x_train, y_train,
                          validation_data=[x_val, y_val],
                          epochs=1,
-                         batch_size=32,
+                         batch_size=8,
                          verbose=2)
 
     score_all = model.evaluate(X_pre, Y_pre, verbose=2)
@@ -181,6 +182,22 @@ encoded_docs_test = t.texts_to_matrix(test_data_text_cleared, mode='count')
 pred = model.predict(encoded_docs_test)
 df_pred_val = pd.DataFrame(argmax(pred, 1))
 test_data['prediction'] = df_pred_val.apply(get_label_name)
+
+
+
+
+# out = model.fit(x_train, y_train,
+#                 validation_data=[x_val, y_val],
+#                 epochs=1,
+#                 batch_size=32,
+#                 verbose=2)
+
+
+# model.fit(x_train, y_train,
+#                      validation_data=[x_val, y_val],
+#                      epochs=1,
+#                      batch_size=16,
+#                      verbose=2)
 
 
 #
