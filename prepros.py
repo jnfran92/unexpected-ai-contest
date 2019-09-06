@@ -8,7 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk.corpus import stopwords
 from keras.preprocessing.text import text_to_word_sequence
-
+from keras.preprocessing.text import Tokenizer
+from sklearn.preprocessing import LabelEncoder
 
 def has_numbers(input_string):
     return bool(re.search(r'\d', input_string))
@@ -27,10 +28,10 @@ def custom_text_format(text_arg):
                 try:
                     number = float(w)
                     # print('it has only numbers')
-                    text_fixed += 'a_number'
+                    text_fixed += 'anumber'
                     # text_fixed += ''
                 except:
-                    text_fixed += 'a_mixed_number'
+                    text_fixed += 'amixednumber'
                     # print('it has mixed words')
             else:
                 text_fixed += w
@@ -46,11 +47,50 @@ def custom_text_format(text_arg):
 
 
 input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
-data = pd.read_csv(input_path, nrows=100)
+data = pd.read_csv(input_path, nrows=300)
 
 data['title_cleaned'] = data['title'].apply(custom_text_format)
 
+
+docs = data['title_cleaned']
+# create the tokenizer
+t = Tokenizer()
+# fit the tokenizer on the documents
+t.fit_on_texts(docs)
+
+
+# summarize what was learned
+print(t.word_counts)
+print(t.document_count)
+# print(t.word_index)
+# print(t.word_docs)
+
+
+encoded_docs = t.texts_to_matrix(docs, mode='count')
+print(encoded_docs)
+
+#
+# # categories - dummy
+# cats = data['category']
+# pd.get_dummies(data, columns=['category']).head()
+
+# categories - sklearn
+lb_make = LabelEncoder()
+data["category_code"] = lb_make.fit_transform(data["category"])
+
+
+
+
+
+
+
+
+
 X_train, X_test, y_train, y_test = train_test_split(data['title_cleaned'], data['category'], test_size=0.2)
+
+
+
+
 
 
 vectorizer = CountVectorizer(binary=True, stop_words=stopwords.words('english'),
@@ -68,18 +108,6 @@ result = text_to_word_sequence(text)
 print(result)
 
 
-
-from keras.preprocessing.text import one_hot
-from keras.preprocessing.text import text_to_word_sequence
-# define the document
-text = 'The quick brown fox jumped over the lazy dog.'
-# estimate the size of the vocabulary
-words = set(text_to_word_sequence(text))
-vocab_size = len(words)
-print(vocab_size)
-# integer encode the document
-result = one_hot(text, round(vocab_size*1.3))
-print(result)
 
 
 
