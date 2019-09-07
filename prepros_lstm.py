@@ -87,9 +87,9 @@ print(encoded_seqs)
 encoded_seqs_pad = pad_sequences(encoded_seqs, maxlen=None, dtype='int32', padding='pre', truncating='pre', value=0.0)
 
 # Scaler
-# scaler = StandardScaler().fit(encoded_seqs_pad)
-# encoded_seqs_pad_scaled = scaler.transform(encoded_seqs_pad)
-encoded_seqs_pad_scaled = encoded_seqs_pad
+scaler = StandardScaler().fit(encoded_seqs_pad)
+encoded_seqs_pad_scaled = scaler.transform(encoded_seqs_pad)
+# encoded_seqs_pad_scaled = encoded_seqs_pad
 
 print("Encoded Seqs Shape")
 print(encoded_seqs_pad.shape)
@@ -116,7 +116,7 @@ x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 # Create model
 model = Sequential()
 model.add(
-    Conv1D(filters=64, kernel_size=8, padding='causal', activation='relu',
+    Conv1D(filters=128, kernel_size=12, padding='causal', activation='relu',
            input_shape=(x_train.shape[1], x_train.shape[2])))
 model.add(MaxPooling1D(pool_size=2))
 
@@ -172,14 +172,19 @@ df_pred['real'] = argmax(Y_pre, 1)
 
 condition = ((df_pred[0] - df_pred['real']) == 0)
 
-train_data['title_cleared'] = train_data_text_cleared
 train_data['prediction'] = df_pred[0].map(get_label_name)
 train_data['prediction_state'] = condition
+train_data['title_cleared'] = train_data_text_cleared
+
 
 
 # Prediction on Test Data
-encoded_docs_test = t.texts_to_matrix(test_data_text_cleared, mode='count')
-pred = model.predict(encoded_docs_test)
+encoded_docs_test = t.texts_to_sequences(test_data_text_cleared)
+encoded_docs_test_pad = pad_sequences(encoded_docs_test, maxlen=encoded_seqs_pad.shape[1], dtype='int32', padding='pre', truncating='pre', value=0.0)
+shp_temp = encoded_docs_test_pad.shape
+encoded_docs_test_pad = scaler.transform(encoded_docs_test_pad).reshape([shp_temp[0], shp_temp[1], 1])
+
+pred = model.predict(encoded_docs_test_pad)
 df_pred_val = pd.DataFrame(argmax(pred, 1))
 test_data['prediction'] = df_pred_val.apply(get_label_name)
 
