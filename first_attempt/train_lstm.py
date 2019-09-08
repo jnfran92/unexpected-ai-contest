@@ -116,10 +116,10 @@ x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 
 # Create model
 model = Sequential()
-model.add(
-    Conv1D(filters=128, kernel_size=12, padding='causal', activation='relu',
-           input_shape=(x_train.shape[1], x_train.shape[2])))
-model.add(MaxPooling1D(pool_size=2))
+# model.add(
+#     Conv1D(filters=128, kernel_size=12, padding='causal', activation='relu',
+#            input_shape=(x_train.shape[1], x_train.shape[2])))
+# model.add(MaxPooling1D(pool_size=2))
 
 # model.add(
 #     Conv1D(filters=8, kernel_size=4, padding='causal', activation='relu'))
@@ -127,6 +127,9 @@ model.add(MaxPooling1D(pool_size=2))
 
 model.add(LSTM(128))
 model.add(Dense(y_train.shape[1], activation='softmax'))
+
+
+
 
 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
