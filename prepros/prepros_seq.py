@@ -60,17 +60,10 @@ input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
 input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 # input_path = "./train.csv"
 
-# train_data = pd.read_csv(input_path, nrows=150000)
-train_data = pd.read_csv(input_path)
+train_data = pd.read_csv(input_path, nrows=500000)
+# train_data = pd.read_csv(input_path)
 
 test_data = pd.read_csv(input_path_test, nrows=1500)
-
-train_data_text_cleared = train_data['title'].apply(custom_text_format)
-
-test_data_text_cleared = test_data['title'].apply(custom_text_format)
-
-docs_global = pd.concat([train_data_text_cleared, test_data_text_cleared])
-docs_global = docs_global.reset_index(drop=True)
 
 # Subset
 gs = train_data.groupby('category')
@@ -79,4 +72,22 @@ gs_summary = gs.count().sort_values(by='title')
 print(gs_summary)
 
 
+# Get subset to test n groups with large number of samples by group
+n_groups = 4
+gs_cats = gs_summary.iloc[-1-n_groups:-1, :].index
+
+c1 = (train_data['category'] == gs_cats[0])
+c2 = (train_data['category'] == gs_cats[1])
+c3 = (train_data['category'] == gs_cats[2])
+c4 = (train_data['category'] == gs_cats[3])
+c_all = (c1 | c2 | c3 | c4)
+
+train_data_subset = train_data[c_all]
+
+# Clear Data
+train_data_text_cleared = train_data['title'].apply(custom_text_format)
+test_data_text_cleared = test_data['title'].apply(custom_text_format)
+
+docs_global = pd.concat([train_data_text_cleared, test_data_text_cleared])
+docs_global = docs_global.reset_index(drop=True)
 
