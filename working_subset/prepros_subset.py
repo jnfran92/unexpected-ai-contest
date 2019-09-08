@@ -5,19 +5,8 @@ import string
 import numpy as np
 
 np.random.seed(1337) # for reproducibility
-from keras.layers import Conv1D, MaxPooling1D
-from keras.layers import LSTM
 
 import pandas as pd
-from keras.layers import Dense
-from keras.models import Sequential
-from keras.optimizers import *
-from keras.preprocessing.text import Tokenizer
-from sklearn.preprocessing import StandardScaler
-from numpy import argmax
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelBinarizer
-from keras.preprocessing.sequence import pad_sequences
 
 
 def has_numbers(input_string):
@@ -82,12 +71,9 @@ c3 = (train_data['category'] == gs_cats[2])
 c4 = (train_data['category'] == gs_cats[3])
 c_all = (c1 | c2 | c3 | c4)
 
-train_data_subset = train_data[c_all]
+train_data_subset = train_data[c_all].reset_index(drop=True)
 
 # Clear Data
-train_data_text_cleared = train_data['title'].apply(custom_text_format)
-test_data_text_cleared = test_data['title'].apply(custom_text_format)
-
-docs_global = pd.concat([train_data_text_cleared, test_data_text_cleared])
-docs_global = docs_global.reset_index(drop=True)
-
+train_data_subset['text_cleaned'] = train_data_subset['title'].apply(custom_text_format)
+# train_data_subset['category'] = train_data_subset['category']
+train_data_subset.to_pickle("./subset")
