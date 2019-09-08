@@ -60,7 +60,8 @@ input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
 input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 # input_path = "./train.csv"
 
-train_data = pd.read_csv(input_path, nrows=15000)
+# train_data = pd.read_csv(input_path, nrows=150000)
+train_data = pd.read_csv(input_path)
 
 test_data = pd.read_csv(input_path_test, nrows=1500)
 
@@ -74,8 +75,8 @@ docs_global = docs_global.reset_index(drop=True)
 # Subset
 gs = train_data.groupby('category')
 
-gs_summary = gs.count()
-print(gs_summary.sort_values(by='title'))
+gs_summary = gs.count().sort_values(by='title')
+print(gs_summary)
 
 
 
