@@ -37,11 +37,12 @@ def custom_text_format(text_arg):
                 try:
                     number = float(w)
                     # print('it has only numbers')
-                    text_fixed += 'anumber'
-                    # text_fixed += ''
+                    # text_fixed += 'anumber'
+                    text_fixed += ''
                 except:
-                    text_fixed += 'amixednumber'
+                    # text_fixed += 'amixednumber'
                     # print('it has mixed words')
+                    text_fixed += ''
             else:
                 text_fixed += w
 
@@ -81,7 +82,7 @@ print(t.document_count)
 
 # Encode Train data
 encoded_seqs = t.texts_to_sequences(train_data_text_cleared)
-print(encoded_seqs)
+# print(encoded_seqs)
 
 # Pad Train Data
 encoded_seqs_pad = pad_sequences(encoded_seqs, maxlen=None, dtype='int32', padding='pre', truncating='pre', value=0.0)
