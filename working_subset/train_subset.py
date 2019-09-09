@@ -87,7 +87,7 @@ score_all = model.evaluate(X_pre, Y_pre, verbose=0)
 val_acc_temp = score_all[0]
 # score_all_test = model.evaluate(x_val, y_val, verbose=0)
 # print('All data acc: ' + str(score_all[1]))
-# print('Val data acc: ' + str(score_all_test[1]))
+print('Val data acc: ' + str(val_acc_temp))
 
 counter = 1
 while val_acc_temp <= 0.95:
