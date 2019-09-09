@@ -84,9 +84,9 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 print(model.summary())
 
 score_all = model.evaluate(X_pre, Y_pre, verbose=0)
-score_all_test = model.evaluate(x_val, y_val, verbose=0)
-print('All data acc: ' + str(score_all[1]))
-print('Val data acc: ' + str(score_all_test[1]))
+# score_all_test = model.evaluate(x_val, y_val, verbose=0)
+# print('All data acc: ' + str(score_all[1]))
+# print('Val data acc: ' + str(score_all_test[1]))
 
 counter = 1
 while score_all[1] <= 0.95:
@@ -97,18 +97,14 @@ while score_all[1] <= 0.95:
               batch_size=32,
               verbose=2)
 
-    score_all = model.evaluate(X_pre, Y_pre, verbose=2)
-    score_all_test = model.evaluate(x_val, y_val, verbose=0)
-    print('All data acc: ' + str(score_all[1]))
-    print('Val data acc: ' + str(score_all_test[1]))
+    # score_all = model.evaluate(X_pre, Y_pre, verbose=2)
+    # score_all_test = model.evaluate(x_val, y_val, verbose=0)
+    # print('All data acc: ' + str(score_all[1]))
+    # print('Val data acc: ' + str(score_all_test[1]))
     print('--------------')
     counter += 1
 
-#
-# pred = model.predict(X_pre)
-# df_pred = pd.DataFrame(argmax(pred, 1))
-# df_pred['real'] = argmax(Y_pre, 1)
-#
+
 pred = model.predict(x_val)
 df_pred = pd.DataFrame(argmax(pred, 1))
 df_pred['real'] = argmax(y_val, 1)
