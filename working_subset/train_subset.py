@@ -35,6 +35,9 @@ t.fit_on_texts(docs_global)
 print('Test plus Train data documents:')
 print(t.document_count)
 
+t_index_words_len = t.index_word.__len__()
+print('Vocabulary Tokenizer Size: ' + str(t_index_words_len))
+
 # Encode Train data
 encoded_seqs = t.texts_to_sequences(train_data['text_cleaned'])
 
