@@ -98,7 +98,7 @@ while val_acc_temp <= 0.95:
               batch_size=256,
               verbose=2)
 
-    val_acc_temp = fit_data.history['val_acc'][1]
+    val_acc_temp = fit_data.history['val_acc'][0]
 
     # score_all = model.evaluate(X_pre, Y_pre, verbose=2)
     # score_all_test = model.evaluate(x_val, y_val, verbose=0)
