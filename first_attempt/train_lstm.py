@@ -5,7 +5,6 @@ import string
 import numpy as np
 
 np.random.seed(1337) # for reproducibility
-from keras.layers import Conv1D, MaxPooling1D
 from keras.layers import LSTM
 
 import pandas as pd

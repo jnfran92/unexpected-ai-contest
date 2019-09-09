@@ -47,12 +47,14 @@ def custom_text_format(text_arg):
 
 input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
 input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
+
 # input_path = "./train.csv"
+# input_path_test = "../../test.csv"
 
-train_data = pd.read_csv(input_path, nrows=500000)
-# train_data = pd.read_csv(input_path)
+n_rows = 5e5
+train_data = pd.read_csv(input_path, nrows=n_rows)
 
-test_data = pd.read_csv(input_path_test, nrows=1500)
+test_data = pd.read_csv(input_path_test)
 
 # Subset
 gs = train_data.groupby('category')
@@ -62,18 +64,26 @@ print(gs_summary)
 
 
 # Get subset to test n groups with large number of samples by group
-n_groups = 4
+n_groups = 10
 gs_cats = gs_summary.iloc[-1-n_groups:-1, :].index
+print('Groups selected: ')
+print(gs_cats)
 
-c1 = (train_data['category'] == gs_cats[0])
-c2 = (train_data['category'] == gs_cats[1])
-c3 = (train_data['category'] == gs_cats[2])
-c4 = (train_data['category'] == gs_cats[3])
-c_all = (c1 | c2 | c3 | c4)
+c_temp = (train_data['category'] == '')
+for c in gs_cats:
+    # print(c)
+    c_temp |= (train_data['category'] == c)
 
+c_all = c_temp
 train_data_subset = train_data[c_all].reset_index(drop=True)
+print('Train_data subset Shape: ' + str(train_data_subset.shape))
 
-# Clear Data
+# Clear Data Train
 train_data_subset['text_cleaned'] = train_data_subset['title'].apply(custom_text_format)
-# train_data_subset['category'] = train_data_subset['category']
-train_data_subset.to_pickle("./subset")
+train_data_subset.to_pickle("./train_subset")
+
+# Clear Data Test
+test_data['text_cleaned'] = test_data['title'].apply(custom_text_format)
+test_data_subset = pd.DataFrame(test_data['text_cleaned'])
+test_data_subset.to_pickle('./test_subset')
+
