@@ -84,18 +84,21 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 print(model.summary())
 
 score_all = model.evaluate(X_pre, Y_pre, verbose=0)
+val_acc_temp = score_all[0]
 # score_all_test = model.evaluate(x_val, y_val, verbose=0)
 # print('All data acc: ' + str(score_all[1]))
 # print('Val data acc: ' + str(score_all_test[1]))
 
 counter = 1
-while score_all[1] <= 0.95:
+while val_acc_temp <= 0.95:
     print('counter steps: ' + str(counter))
-    model.fit(x_train, y_train,
+    fit_data = model.fit(x_train, y_train,
               validation_data=[x_val, y_val],
               epochs=1,
-              batch_size=32,
+              batch_size=256,
               verbose=2)
+
+    val_acc_temp = fit_data.history['val_acc'][0]
 
     # score_all = model.evaluate(X_pre, Y_pre, verbose=2)
     # score_all_test = model.evaluate(x_val, y_val, verbose=0)
