@@ -71,7 +71,7 @@ X_pre = encoded_seqs_pad_scaled
 x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 
 # The maximum number of words to be used. (most frequent)
-MAX_NB_WORDS = 90000
+MAX_NB_WORDS = t_index_words_len
 # Max number of words in each complaint.
 MAX_SEQUENCE_LENGTH = 250
 # This is fixed.
