@@ -20,4 +20,4 @@ On Mac:
 # Requirements
 
 - Tensorflow
-- Dask
+- Dask : `pip install "dask[complete]" `

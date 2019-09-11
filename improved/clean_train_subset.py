@@ -3,6 +3,7 @@ import os
 from multiprocessing import Pool
 import numpy as np
 import pandas as pd
+import time
 
 from libs.cleaning import custom_text_format
 
@@ -60,14 +61,27 @@ train_data_subset = train_data
 print('Train_data subset Shape: ' + str(train_data_subset.shape))
 
 # Clear Data Train
+print('Cleaning train data')
+start = time.time()
 train_data_subset['text_cleaned'] = train_data_subset['title'].apply(custom_text_format)
+stop = time.time()
+print(stop - start)
 
+
+print('Saving pkl')
 # Save as pkl
-train_data_subset.to_pickle("./train_subset")
+start = time.time()
+train_data_subset.to_pickle("./train_subset.pkl")
+stop = time.time()
+print(stop - start)
 
 # Save as h5
-
-
+print('Saving h5')
+# Save as pkl
+start = time.time()
+train_data_subset.to_hdf('./train_subset.h5', 'train_data')
+stop = time.time()
+print(stop - start)
 
 #
 # # Clear Data Test
