@@ -1,4 +1,5 @@
 
+import os
 import numpy as np
 import pandas as pd
 from keras.layers import Dense
@@ -10,6 +11,11 @@ from keras.preprocessing.text import Tokenizer
 from numpy import argmax
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
+
+
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+# The GPU id to use, usually either "0" or "1";
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 np.random.seed(1337)  # for reproducibility
 
@@ -85,7 +91,8 @@ EMBEDDING_DIM = 120
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
+model.add(LSTM(100, return_sequences=True))
+# model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(y_train.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])

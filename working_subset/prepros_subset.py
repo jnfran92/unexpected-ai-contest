@@ -26,10 +26,10 @@ def custom_text_format(text_arg):
                 try:
                     number = float(w)
                     # print('it has only numbers')
-                    text_fixed += 'isanumber'
+                    text_fixed += 'NUM'
                     # text_fixed += ''
                 except:
-                    text_fixed += 'isamixed'
+                    text_fixed += 'MIX'
                     # print('it has mixed words')
                     # text_fixed += ''
             else:
