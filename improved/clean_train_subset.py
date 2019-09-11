@@ -12,7 +12,7 @@ np.random.seed(1337)  # for reproducibility
 
 data_path = "/Users/Juan/Downloads/mercadolibre_data/train_chunks"
 input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
-input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
+# input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 
 # data_path = "../../"
 # input_path = "../../train.csv"
@@ -71,7 +71,7 @@ print(stop - start)
 print('Saving pkl')
 # Save as pkl
 start = time.time()
-train_data_subset.to_pickle("./train_subset.pkl")
+train_data_subset.to_pickle("./data/train_subset.pkl")
 stop = time.time()
 print(stop - start)
 
@@ -79,7 +79,7 @@ print(stop - start)
 print('Saving h5')
 # Save as pkl
 start = time.time()
-train_data_subset.to_hdf('./train_subset.h5', 'train_data')
+train_data_subset.to_hdf('./data/train_subset.h5', 'train_data')
 stop = time.time()
 print(stop - start)
 
