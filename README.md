@@ -15,3 +15,9 @@ On Mac:
      split -l 500000 train.csv ./train_chunks/train_chunk_
      cd train_chunks
      for i in *; do mv "$i" "$i.csv"; done
+
+
+# Requirements
+
+- Tensorflow
+- Dask
