@@ -26,10 +26,10 @@ def custom_text_format(text_arg):
                 try:
                     number = float(w)
                     # print('it has only numbers')
-                    # text_fixed += 'anumber'
+                    text_fixed += 'isanumber'
                     text_fixed += ''
                 except:
-                    # text_fixed += 'amixednumber'
+                    text_fixed += 'isamixed'
                     # print('it has mixed words')
                     text_fixed += ''
             else:
@@ -48,10 +48,10 @@ def custom_text_format(text_arg):
 input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
 input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 
-# input_path = "./train.csv"
+# input_path = "../../train.csv"
 # input_path_test = "../../test.csv"
 
-n_rows = 5e5
+n_rows = 10e6
 train_data = pd.read_csv(input_path, nrows=n_rows)
 
 test_data = pd.read_csv(input_path_test)
@@ -65,7 +65,7 @@ print(gs_summary)
 
 # Get subset to test n groups with large number of samples by group
 n_groups = 10
-gs_cats = gs_summary.iloc[-1-n_groups:-1, :].index
+gs_cats = gs_summary.iloc[:, :].index
 print('Groups selected: ')
 print(gs_cats)
 

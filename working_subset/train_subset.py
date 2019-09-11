@@ -1,18 +1,19 @@
 
+import numpy as np
 import pandas as pd
 from keras.layers import Dense
+from keras.layers import Embedding, SpatialDropout1D
+from keras.layers import LSTM
 from keras.models import Sequential
+from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from numpy import argmax
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
-from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Embedding, SpatialDropout1D
-from keras.layers import LSTM
 
-import numpy as np
 np.random.seed(1337)  # for reproducibility
 
+model_name = 'model_lstm_100_100'
 
 train_data = pd.read_pickle('./train_subset')
 test_data = pd.read_pickle('./test_subset')
@@ -70,16 +71,21 @@ X_pre = encoded_seqs_pad_scaled
 # Split Data
 x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
 
+t_index_words_len = t.index_word.__len__()
+print('Vocabulary Tokenizer Size: ' + str(t_index_words_len))
+
+
 # The maximum number of words to be used. (most frequent)
 MAX_NB_WORDS = t_index_words_len
 # Max number of words in each complaint.
-MAX_SEQUENCE_LENGTH = 250
+MAX_SEQUENCE_LENGTH = 210
 # This is fixed.
-EMBEDDING_DIM = 100
+EMBEDDING_DIM = 120
 
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
+model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(y_train.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -93,24 +99,24 @@ val_acc_temp = score_all[1]
 print('Val data acc: ' + str(val_acc_temp))
 
 counter = 1
-while val_acc_temp <= 0.95:
+max_counter = 8
+while val_acc_temp <= 0.91:
     print('counter steps: ' + str(counter))
     fit_data = model.fit(x_train, y_train,
               validation_data=[x_val, y_val],
               epochs=1,
-              batch_size=256,
+              batch_size=128,
               verbose=2)
 
     val_acc_temp = fit_data.history['val_acc'][0]
 
-    # score_all = model.evaluate(X_pre, Y_pre, verbose=2)
-    # score_all_test = model.evaluate(x_val, y_val, verbose=0)
-    # print('All data acc: ' + str(score_all[1]))
-    # print('Val data acc: ' + str(score_all_test[1]))
+    if counter >= max_counter:
+        break
+
     print('--------------')
     counter += 1
 
-
+print('Predicting data-------')
 pred = model.predict(x_val)
 df_pred = pd.DataFrame(argmax(pred, 1))
 df_pred['real'] = argmax(y_val, 1)
@@ -136,4 +142,13 @@ out_data.columns = ['category']
 out_data.index.name = 'id'
 
 out_data.to_csv("./results.csv", header=True)
+
+# Save model
+print('Saving the Model')
+model_json = model.to_json()
+file_model_name = model_name
+with open('./' + file_model_name + '.json', "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+model.save_weights('./' + file_model_name + '.h5')
 
