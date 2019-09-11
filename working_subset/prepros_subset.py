@@ -51,7 +51,7 @@ input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 # input_path = "../../train.csv"
 # input_path_test = "../../test.csv"
 
-n_rows = 15e6
+n_rows = 20e6
 train_data = pd.read_csv(input_path, nrows=n_rows)
 
 test_data = pd.read_csv(input_path_test)
