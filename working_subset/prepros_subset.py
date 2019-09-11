@@ -27,11 +27,11 @@ def custom_text_format(text_arg):
                     number = float(w)
                     # print('it has only numbers')
                     text_fixed += 'isanumber'
-                    text_fixed += ''
+                    # text_fixed += ''
                 except:
                     text_fixed += 'isamixed'
                     # print('it has mixed words')
-                    text_fixed += ''
+                    # text_fixed += ''
             else:
                 text_fixed += w
 
@@ -51,7 +51,7 @@ input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 # input_path = "../../train.csv"
 # input_path_test = "../../test.csv"
 
-n_rows = 10e6
+n_rows = 15e6
 train_data = pd.read_csv(input_path, nrows=n_rows)
 
 test_data = pd.read_csv(input_path_test)
