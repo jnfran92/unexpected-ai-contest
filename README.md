@@ -20,4 +20,4 @@ On Mac:
 # Requirements
 
 - Tensorflow
-- Dask : `pip install "dask[complete]" `
+- Swifter plugin for Pandas `pip install swifter`

@@ -4,6 +4,7 @@ from multiprocessing import Pool
 import numpy as np
 import pandas as pd
 import time
+import swifter
 
 from libs.cleaning import custom_text_format
 
@@ -35,26 +36,17 @@ if __name__ == '__main__':
 files = os.listdir(data_path)
 file_list = [filename for filename in files if filename.split('.')[1] == 'csv']
 
-file_list_limited = file_list[40:]
+n_limit = 35            # getting all the data with zero
+file_list_limited = file_list[n_limit:]
 
+print("Reading data")
+start = time.time()
 df_list = pool.map(custom_read_csv, file_list_limited)
+stop = time.time()
+print(stop - start)
 
 train_data = pd.concat(df_list,  ignore_index=True, axis=0)
 train_data.columns = ['title', 'confidence', 'lang', 'category']
-
-# test_data = pd.read_csv(input_path_test)
-
-# Subset
-# gs = train_data.groupby('category')
-#
-# gs_summary = gs.count().sort_values(by='title')
-# print(gs_summary)
-
-# Get subset to test n groups with large number of samples by group
-# n_groups = 10
-# gs_cats = gs_summary.iloc[:, :].index
-# print('Groups selected: ')
-# print(gs_cats)
 
 # Get all groups
 train_data_subset = train_data
@@ -64,6 +56,13 @@ print('Train_data subset Shape: ' + str(train_data_subset.shape))
 print('Cleaning train data')
 start = time.time()
 train_data_subset['text_cleaned'] = train_data_subset['title'].apply(custom_text_format)
+stop = time.time()
+print(stop - start)
+
+
+print('Cleaning train data 2')
+start = time.time()
+whatever = train_data_subset['title'].swifter.apply(custom_text_format)
 stop = time.time()
 print(stop - start)
 
@@ -82,9 +81,3 @@ start = time.time()
 train_data_subset.to_hdf('./data/train_subset.h5', 'train_data')
 stop = time.time()
 print(stop - start)
-
-#
-# # Clear Data Test
-# test_data['text_cleaned'] = test_data['title'].apply(custom_text_format)
-# test_data_subset = pd.DataFrame(test_data['text_cleaned'])
-# test_data_subset.to_pickle('./test_subset')
