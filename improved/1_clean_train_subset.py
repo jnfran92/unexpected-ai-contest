@@ -11,13 +11,13 @@ from libs.cleaning import custom_text_format
 np.random.seed(1337)  # for reproducibility
 
 
-data_path = "/Users/Juan/Downloads/mercadolibre_data/train_chunks"
-input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
+# data_path = "/Users/Juan/Downloads/mercadolibre_data/train_chunks"
+# input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
 # input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 
-# data_path = "../../"
-# input_path = "../../train.csv"
-# input_path_test = "../../test.csv"
+data_path = "../../"
+input_path = "../../train.csv"
+input_path_test = "../../test.csv"
 
 
 def custom_read_csv(filename):
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 files = os.listdir(data_path)
 file_list = [filename for filename in files if filename.split('.')[1] == 'csv']
 
-n_limit = 35            # getting all the data with zero
+n_limit = 30            # getting all the data with zero
 file_list_limited = file_list[n_limit:]
 
 print("Reading data")
@@ -60,19 +60,19 @@ stop = time.time()
 print(stop - start)
 
 
-print('Cleaning train data 2')
+print('Cleaning train data Parallel')
 start = time.time()
 whatever = train_data_subset['title'].swifter.apply(custom_text_format)
 stop = time.time()
 print(stop - start)
 
 
-print('Saving pkl')
-# Save as pkl
-start = time.time()
-train_data_subset.to_pickle("./data/train_subset.pkl")
-stop = time.time()
-print(stop - start)
+# print('Saving pkl')
+# # Save as pkl
+# start = time.time()
+# train_data_subset.to_pickle("./data/train_subset.pkl")
+# stop = time.time()
+# print(stop - start)
 
 # Save as h5
 print('Saving h5')

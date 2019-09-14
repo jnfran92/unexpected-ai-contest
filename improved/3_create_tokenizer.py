@@ -21,12 +21,12 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 np.random.seed(1337)  # for reproducibility
 
-print("Reading pkl")
-start = time.time()
-train_data = pd.read_pickle('./data/train_subset.pkl')
-test_data = pd.read_pickle('./data/test_subset.pkl')
-stop = time.time()
-print(stop - start)
+# print("Reading pkl")
+# start = time.time()
+# train_data = pd.read_pickle('./data/train_subset.pkl')
+# test_data = pd.read_pickle('./data/test_subset.pkl')
+# stop = time.time()
+# print(stop - start)
 
 
 print("Reading h5")
