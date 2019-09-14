@@ -15,7 +15,7 @@ np.random.seed(1337)  # for reproducibility
 # input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
 # input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 
-data_path = "../../"
+data_path = "../train_chunks"
 input_path = "../../train.csv"
 input_path_test = "../../test.csv"
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 files = os.listdir(data_path)
 file_list = [filename for filename in files if filename.split('.')[1] == 'csv']
 
-n_limit = 30            # getting all the data with zero
+n_limit = 0            # getting all the data with zero
 file_list_limited = file_list[n_limit:]
 
 print("Reading data")
