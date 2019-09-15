@@ -10,7 +10,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 np.random.seed(1337)  # for reproducibility
 
-print("Reading pkl PORTUGUESE")
+print("Reading npy PORTUGUESE")
 start = time.time()
 X_pre = np.load('./train_data/X_portuguese.npy')
 Y_pre = np.load('./train_data/Y_portuguese.npy')

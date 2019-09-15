@@ -62,7 +62,14 @@ print(lb_results.shape)
 
 Y_pre = lb_results
 X_pre = encoded_seqs_pad_scaled
+
 # Saving train_data and labels: X and Y
-print("Saving train data")
-np.save("./train_data/X_spanish.npy", X_pre)
-np.save("./train_data/Y_spanish.npy", Y_pre)
+X_pre_size_half = int(X_pre.shape[0]/2)
+print("Saving train data 1")
+np.save("./train_data/X0_spanish.npy", X_pre[0:X_pre_size_half])
+np.save("./train_data/Y0_spanish.npy", Y_pre[0:X_pre_size_half])
+
+print("Saving train data 2")
+np.save("./train_data/X1_spanish.npy", X_pre[X_pre_size_half:])
+np.save("./train_data/Y1_spanish.npy", Y_pre[X_pre_size_half:])
+

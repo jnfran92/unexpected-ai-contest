@@ -1,13 +1,12 @@
 
 import os
-import time
 import pickle
+import time
 
 import numpy as np
 import pandas as pd
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -63,6 +62,11 @@ print(lb_results.shape)
 Y_pre = lb_results
 X_pre = encoded_seqs_pad_scaled
 # Saving train_data and labels: X and Y
-print("Saving train data")
-np.save("./train_data/X_portuguese.npy", X_pre)
-np.save("./train_data/Y_portuguese.npy", Y_pre)
+X_pre_size_half = int(X_pre.shape[0]/2)
+print("Saving train data 1")
+np.save("./train_data/X0_portuguese.npy", X_pre[0:X_pre_size_half])
+np.save("./train_data/Y0_portuguese.npy", Y_pre[0:X_pre_size_half])
+
+print("Saving train data 2")
+np.save("./train_data/X1_portuguese.npy", X_pre[X_pre_size_half:])
+np.save("./train_data/Y1_portuguese.npy", Y_pre[X_pre_size_half:])
