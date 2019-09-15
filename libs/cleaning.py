@@ -10,7 +10,11 @@ def has_numbers(input_string):
 def custom_text_format(text_arg):
     """Apply a custom cleaning process: remove special characters,
     and set numbers and numbers-words with tags"""
-    text_arg = text_arg.translate(str.maketrans('', '', string.punctuation))
+    # text_arg = text_arg.translate(str.maketrans('', '', string.punctuation))
+
+    regex = re.compile('[%s]' % re.escape(string.punctuation))
+    text_arg = regex.sub(' ', text_arg)
+
     words = text_arg.split()
     text_fixed = ''
 
