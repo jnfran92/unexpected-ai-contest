@@ -1,50 +1,98 @@
-
 import os
+import pickle
 import time
 
 import numpy as np
-from sklearn.model_selection import train_test_split
+from keras.callbacks import EarlyStopping, CSVLogger
+from keras.layers import Dense
+from keras.layers import Embedding, SpatialDropout1D
+from keras.layers import LSTM
+from keras.models import Sequential
+from keras.preprocessing.text import Tokenizer
+import pandas as pd
+from numpy import argmax
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 np.random.seed(1337)  # for reproducibility
 
-print("Reading train and val SPANISH")
+batches_path = './train_data/batches/spanish'
+n_batch = 0  # Batch to train
+
+print("Reading train batch and val SPANISH")
+print("Reading validation")
+x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
+x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
+
+y_val0 = np.load(batches_path + '/' + 'y_val' + str(0) + '.npy')
+y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
+
+x_val = np.concatenate((x_val0, x_val1))
+y_val = np.concatenate((y_val0, y_val1))
+
+print("Reading batch")
 start = time.time()
-X_pre = np.load('./train_data/X_spanish.npy')
-Y_pre = np.load('./train_data/Y_spanish.npy')
+x_train = np.load(batches_path + '/' + 'x_train_' + str(n_batch) + '.npy')
+y_train = np.load(batches_path + '/' + 'y_train_' + str(n_batch) + '.npy')
 stop = time.time()
 print(stop - start)
 
+print("Reading Tokenizer")
+t = Tokenizer()
+print("Loading the tokenizer")
+with open('./tokenizer/tokenizer_spanish.pickle', 'rb') as handle:
+    t = pickle.load(handle)
 
-print("X Train data size")
-print(X_pre.shape)
-print("Y Train data size")
-print(Y_pre.shape)
+max_num_words_vocabulary = len(t.index_word)
+print("Max unmwords vocabulary: " + str(max_num_words_vocabulary))
+del t
 
-# Split Data
-x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.3)
+print("Creating Model")
+# The maximum number of words to be used. (most frequent)
+MAX_NB_WORDS = max_num_words_vocabulary
+# This is fixed.
+EMBEDDING_DIM = 100
 
-# Saving validation data
-print("Saving validation data")
-batches_path = './train_data/batches/spanish'
-np.save(batches_path + '/' + 'x_val' + '.npy', x_val)
-np.save(batches_path + '/' + 'y_val' + '.npy', y_val)
+model = Sequential()
+model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
+model.add(SpatialDropout1D(0.2))
+model.add(LSTM(120))
+model.add(Dense(y_train.shape[1], activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Creating batches
-n_batches = 10
+print(model.summary())
 
-x_train_batches = np.array_split(x_train, n_batches)
-y_train_batches = np.array_split(y_train, n_batches)
+# Create Callback
+early_stop = EarlyStopping(monitor='val_loss',
+                           min_delta=0,
+                           patience=3,
+                           verbose=1)
 
-for x in range(n_batches):
-    print("Saving " + str(x) + " batch")
-    print('x_train batch size: ' + str(x_train_batches[x].shape))
-    print('y_train batch size: ' + str(y_train_batches[x].shape))
-    np.save(batches_path + '/' + 'x_train_' + str(x) + '.npy', x_train_batches[x])
-    np.save(batches_path + '/' + 'y_train_' + str(x) + '.npy', y_train_batches[x])
+csv_logger = CSVLogger(filename="./logs/log_train_spanish_b" + str(n_batch) + ".csv")
+
+# Train
+fit_data = model.fit(x_train, y_train,
+                     validation_data=[x_val, y_val],
+                     epochs=100,
+                     batch_size=128,
+                     verbose=2,
+                     callbacks=[early_stop, csv_logger])
 
 
+print('Predicting data-------')
+pred = model.predict(x_val)
+df_pred = pd.DataFrame(argmax(pred, 1))
+df_pred['real'] = argmax(y_val, 1)
+print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
 
+
+# Save model
+print('Saving the Model')
+model_json = model.to_json()
+file_model_name = "spanish_model_fa"
+with open('./models/spanish/' + file_model_name + '.json', "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+model.save_weights('./models/spanish/' + file_model_name + '.h5')
 
