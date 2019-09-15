@@ -4,7 +4,7 @@ from multiprocessing import Pool
 import numpy as np
 import pandas as pd
 import time
-import swifter
+# import swifter
 
 from libs.cleaning import custom_text_format
 
@@ -12,12 +12,8 @@ np.random.seed(1337)  # for reproducibility
 
 
 # data_path = "/Users/Juan/Downloads/mercadolibre_data/train_chunks"
-# input_path = "/Users/Juan/Downloads/mercadolibre_data/train.csv"
-# input_path_test = "/Users/Juan/Downloads/mercadolibre_data/test.csv"
 
 data_path = "../train_chunks"
-input_path = "../../train.csv"
-input_path_test = "../../test.csv"
 
 
 def custom_read_csv(filename):
@@ -36,7 +32,7 @@ if __name__ == '__main__':
 files = os.listdir(data_path)
 file_list = [filename for filename in files if filename.split('.')[1] == 'csv']
 
-n_limit = 0            # getting all the data with zero
+n_limit = 0          # getting all the data with zero
 file_list_limited = file_list[n_limit:]
 
 print("Reading data")
@@ -59,25 +55,24 @@ train_data_subset['text_cleaned'] = train_data_subset['title'].apply(custom_text
 stop = time.time()
 print(stop - start)
 
+# Group by language
+lang_groups = train_data_subset.groupby('lang')
+print(lang_groups.count())
 
-print('Cleaning train data Parallel')
+
+# Save as pkl
+print('Saving Spanish pkl')
+# Save as pkl
 start = time.time()
-whatever = train_data_subset['title'].swifter.apply(custom_text_format)
+lang_groups.get_group('spanish').to_pickle('./data/train_subset_spanish.pkl')
 stop = time.time()
 print(stop - start)
 
 
-# print('Saving pkl')
-# # Save as pkl
-# start = time.time()
-# train_data_subset.to_pickle("./data/train_subset.pkl")
-# stop = time.time()
-# print(stop - start)
-
 # Save as h5
-print('Saving h5')
+print('Saving Portuguese pkl')
 # Save as pkl
 start = time.time()
-train_data_subset.to_hdf('./data/train_subset.h5', 'train_data')
+lang_groups.get_group('portuguese').to_pickle('./data/train_subset_portuguese.pkl')
 stop = time.time()
 print(stop - start)
