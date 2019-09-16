@@ -45,7 +45,7 @@ with open('./tokenizer/tokenizer_spanish.pickle', 'rb') as handle:
     t = pickle.load(handle)
 
 max_num_words_vocabulary = len(t.index_word)
-print("Max unmwords vocabulary: " + str(max_num_words_vocabulary))
+print("Max num words vocabulary: " + str(max_num_words_vocabulary))
 del t
 
 print("Creating Model")
@@ -69,7 +69,7 @@ early_stop = EarlyStopping(monitor='val_loss',
                            patience=3,
                            verbose=1)
 
-csv_logger = CSVLogger(filename="./logs/log_train_spanish_b" + str(n_batch) + ".csv")
+csv_logger = CSVLogger(filename="./logs/log_train_spanish_lstm_b" + str(n_batch) + ".csv")
 
 # Train
 fit_data = model.fit(x_train, y_train,

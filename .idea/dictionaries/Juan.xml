@@ -2,6 +2,7 @@
   <dictionary name="Juan">
     <words>
       <w>dataframe</w>
+      <w>lstm</w>
       <w>scaler</w>
       <w>tensorflow</w>
     </words>
