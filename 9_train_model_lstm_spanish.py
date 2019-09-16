@@ -52,7 +52,7 @@ print("Creating Model")
 # The maximum number of words to be used. (most frequent)
 MAX_NB_WORDS = max_num_words_vocabulary
 # This is fixed.
-EMBEDDING_DIM = 100
+EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
@@ -74,7 +74,7 @@ csv_logger = CSVLogger(filename="./logs/log_train_spanish_b" + str(n_batch) + ".
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=100,
+                     epochs=10,
                      batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
