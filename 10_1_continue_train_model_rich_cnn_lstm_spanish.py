@@ -14,7 +14,7 @@ from numpy import argmax
 from keras.models import model_from_json
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 np.random.seed(1337)  # for reproducibility
 
@@ -40,19 +40,11 @@ x_train = np.load(batches_path + '/' + 'x_train_' + str(n_batch) + '.npy')
 y_train = np.load(batches_path + '/' + 'y_train_' + str(n_batch) + '.npy')
 stop = time.time()
 print(stop - start)
-#
-# print("Reading Tokenizer")
-# t = Tokenizer()
-# print("Loading the tokenizer")
-# with open('./tokenizer/tokenizer_spanish.pickle', 'rb') as handle:
-#     t = pickle.load(handle)
-#
-# max_num_words_vocabulary = len(t.index_word)
-# print("Max num words vocabulary: " + str(max_num_words_vocabulary))
-# del t
 
-print("Loading Model")
-model_name = "spanish_model_fa"
+
+# print("Loading Model")
+model_name = "spanish_cnn_1_32_lstm_120_b_" + str(n_batch - 1)
+print("Loading model: " + model_name)
 # load json and create model
 json_file = open('./models/spanish/' + model_name + '.json', 'r')
 loaded_model_json = json_file.read()
@@ -69,7 +61,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=3,
+                           patience=4,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
@@ -77,7 +69,7 @@ csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=15,
+                     epochs=20,
                      batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])

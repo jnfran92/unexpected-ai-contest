@@ -21,7 +21,7 @@ On Mac:
 
 - LSTM alone bad performance.
 
-- LSTM + CNN works fine (1 batch 64% loss_acc): 
+- LSTM + CNN works fine (1 batch 64% loss_acc time step 2600 scs): 
     
     
         model = Sequential()
@@ -33,7 +33,21 @@ On Mac:
         model.add(Dense(y_train.shape[1], activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-
+- LSTM(200) + 2xCNN performs better and faster (1 batch 66 % loss_acc time step 1500 secs )  `9_1_train_model_rich_cnn_lstm_spanish.py`:
+                
+                
+        model = Sequential()
+        model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
+        model.add(SpatialDropout1D(0.2))
+        model.add(Conv1D(filters=64, kernel_size=16, padding='same', activation='relu'))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(Conv1D(filters=32, kernel_size=8, padding='same', activation='relu'))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(LSTM(200))
+        model.add(Dense(y_train.shape[1], activation='softmax'))
+        model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+        
+                
 
 
 ## Requirements
@@ -43,7 +57,7 @@ On Mac:
 
 ## Pip setup
 
-Working setup on Server `(tf-gpu):
+Working setup on Server `(tf-gpu) env`:
     
     absl-py==0.5.0
     astetik==1.9.5
