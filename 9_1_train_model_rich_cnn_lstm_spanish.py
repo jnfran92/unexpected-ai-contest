@@ -13,7 +13,7 @@ import pandas as pd
 from numpy import argmax
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 np.random.seed(1337)  # for reproducibility
 
@@ -57,9 +57,11 @@ EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=32, kernel_size=4, padding='same', activation='relu'))
+model.add(Conv1D(filters=64, kernel_size=16, padding='same', activation='relu'))
 model.add(MaxPooling1D(pool_size=2))
-model.add(LSTM(120))
+model.add(Conv1D(filters=32, kernel_size=8, padding='same', activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
+model.add(LSTM(200))
 model.add(Dense(y_train.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -92,7 +94,7 @@ print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
 # Save model
 print('Saving the Model')
 model_json = model.to_json()
-file_model_name = "spanish_model_fa"
+file_model_name = "spanish_cnn_32_64_lstm_200_b_" + str(n_batch)
 with open('./models/spanish/' + file_model_name + '.json', "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
