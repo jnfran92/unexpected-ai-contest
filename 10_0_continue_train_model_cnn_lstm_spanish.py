@@ -21,6 +21,8 @@ np.random.seed(1337)  # for reproducibility
 batches_path = './train_data/batches/spanish'
 n_batch = 1  # Batch to train
 
+file_model_name = "spanish_cnn_1_32_lstm_120_b_" + str(n_batch)
+
 print("Reading train batch and val SPANISH")
 print("Reading validation")
 x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
@@ -70,7 +72,7 @@ early_stop = EarlyStopping(monitor='val_loss',
                            patience=3,
                            verbose=1)
 
-csv_logger = CSVLogger(filename="./logs/log_train_spanish_cnn_lstm_b" + str(n_batch) + ".csv")
+csv_logger = CSVLogger(filename="./logs/" + file_model_name + str(n_batch) + ".csv")
 
 # Train
 fit_data = model.fit(x_train, y_train,
@@ -91,7 +93,7 @@ print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
 # Save model
 print('Saving the Model')
 model_json = model.to_json()
-file_model_name = "spanish_cnn_1_32_lstm_120_b_" + str(n_batch)
+# file_model_name = "spanish_cnn_1_32_lstm_120_b_" + str(n_batch)
 with open('./models/spanish/' + file_model_name + '.json', "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
