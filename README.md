@@ -23,6 +23,7 @@ On Mac:
 
 - LSTM + CNN works fine (1 batch 64% loss_acc): 
     
+    
     model = Sequential()
     model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
     model.add(SpatialDropout1D(0.2))
