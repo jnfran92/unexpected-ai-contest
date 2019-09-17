@@ -11,6 +11,7 @@ from keras.models import Sequential
 from keras.preprocessing.text import Tokenizer
 import pandas as pd
 from numpy import argmax
+from keras.models import model_from_json
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
@@ -18,7 +19,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 np.random.seed(1337)  # for reproducibility
 
 batches_path = './train_data/batches/spanish'
-n_batch = 0  # Batch to train
+n_batch = 1  # Batch to train
 
 print("Reading train batch and val SPANISH")
 print("Reading validation")
@@ -37,32 +38,30 @@ x_train = np.load(batches_path + '/' + 'x_train_' + str(n_batch) + '.npy')
 y_train = np.load(batches_path + '/' + 'y_train_' + str(n_batch) + '.npy')
 stop = time.time()
 print(stop - start)
+#
+# print("Reading Tokenizer")
+# t = Tokenizer()
+# print("Loading the tokenizer")
+# with open('./tokenizer/tokenizer_spanish.pickle', 'rb') as handle:
+#     t = pickle.load(handle)
+#
+# max_num_words_vocabulary = len(t.index_word)
+# print("Max num words vocabulary: " + str(max_num_words_vocabulary))
+# del t
 
-print("Reading Tokenizer")
-t = Tokenizer()
-print("Loading the tokenizer")
-with open('./tokenizer/tokenizer_spanish.pickle', 'rb') as handle:
-    t = pickle.load(handle)
+print("Loading Model")
+model_name = "spanish_model_fa"
+# load json and create model
+json_file = open('./models/spanish/' + model_name + '.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+model = model_from_json(loaded_model_json)
+# load weights into new model
+model.load_weights('./models/spanish/' + model_name + ".h5")
+print("Loaded model from disk")
 
-max_num_words_vocabulary = len(t.index_word)
-print("Max num words vocabulary: " + str(max_num_words_vocabulary))
-del t
-
-print("Creating Model")
-# The maximum number of words to be used. (most frequent)
-MAX_NB_WORDS = max_num_words_vocabulary
-# This is fixed.
-EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
-
-model = Sequential()
-model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
-model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=32, kernel_size=4, padding='same', activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-model.add(LSTM(120))
-model.add(Dense(y_train.shape[1], activation='softmax'))
+# Common operation
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
 print(model.summary())
 
 # Create Callback
@@ -76,7 +75,7 @@ csv_logger = CSVLogger(filename="./logs/log_train_spanish_cnn_lstm_b" + str(n_ba
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=10,
+                     epochs=15,
                      batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
