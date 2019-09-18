@@ -54,6 +54,11 @@ print(encoded_seqs_pad.shape)
 lb_style = LabelBinarizer()
 lb_results = lb_style.fit_transform(train_data["category"])
 
+# Saving Binarizer:
+print('Saving binarizer SPANISH')
+with open('./binarizer/binarizer_spanish.pickle', 'wb') as handle:
+    pickle.dump(lb_style, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 print('X Data Size')
 print(encoded_seqs_pad_scaled.shape)
 print('Y Data Size')

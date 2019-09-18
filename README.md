@@ -48,7 +48,20 @@ On Mac:
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
         
                 
+- LSTM + 2CNN performs good in Portuguese lang. :
 
+        
+        model = Sequential()
+        model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
+        model.add(SpatialDropout1D(0.2))
+        model.add(Conv1D(filters=128, kernel_size=16, padding='same', activation='relu'))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(Conv1D(filters=64, kernel_size=8, padding='same', activation='relu'))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(LSTM(200))
+        model.add(Dense(y_train.shape[1], activation='softmax'))
+        model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+        
 
 ## Requirements
 
