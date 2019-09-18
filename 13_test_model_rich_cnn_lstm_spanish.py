@@ -70,6 +70,7 @@ def get_label_name(index):
 
 
 # Predicting test data
+print("Creating results using test data")
 pred = model.predict(encoded_seqs_pad)
 
 df_pred = pd.DataFrame(argmax(pred, 1))
@@ -79,8 +80,29 @@ out_data.index.name = 'id'
 
 out_data['title'] = test_data['text_cleaned']
 
-out_data.to_csv("./results.csv", header=True)
+out_data.to_csv("./test_models_results/test_" + model_name + "results.csv", header=True)
 
+# Summary data and errors
+print("Summarizing data using Validation Data")
+print("Reading validation SPANISH")
+batches_path = './train_data/batches/spanish'
+x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
+x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
+
+y_val0 = np.load(batches_path + '/' + 'y_val' + str(0) + '.npy')
+y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
+
+x_val = np.concatenate((x_val0, x_val1))
+y_val = np.concatenate((y_val0, y_val1))
+
+print('Predicting data-------')
+pred_val = model.predict(x_val)
+df_pred_val = pd.DataFrame(argmax(pred, 1))
+df_pred_val['real'] = argmax(y_val, 1)
+df_pred_val['state_prediction'] = df_pred[0] != df_pred['real']
+
+
+# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
 
 
 
