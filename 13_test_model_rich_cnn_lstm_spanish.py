@@ -22,9 +22,11 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 np.random.seed(1337)  # for reproducibility
 
+# Analysis using n_batch
+n_batch = 3
+
 # Read Test
 test_data = pd.read_pickle('./data/test_subset_spanish.pkl').reset_index(drop=True)
-
 
 print("Reading Tokenizer")
 t = Tokenizer()
@@ -40,7 +42,6 @@ with open('./binarizer/binarizer_spanish.pickle', 'rb') as handle:
 
 
 # Loading Model
-n_batch = 3
 print("Loading Model")
 model_name = "spanish_cnn_32_64_lstm_200_b_" + str(n_batch)
 print("Loading model: " + model_name)
@@ -97,81 +98,23 @@ y_val = np.concatenate((y_val0, y_val1))
 
 print('Predicting data-------')
 pred_val = model.predict(x_val)
-df_pred_val = pd.DataFrame(argmax(pred, 1))
+
+df_pred_val = pd.DataFrame(argmax(pred_val, 1))
 df_pred_val['real'] = argmax(y_val, 1)
-df_pred_val['state_prediction'] = df_pred[0] != df_pred['real']
+df_pred_val['state_prediction'] = df_pred_val[0] == df_pred_val['real']
+df_pred_val['text'] = t.sequences_to_texts(x_val)
+df_pred_val['real_class'] = df_pred_val['real'].map(get_label_name)
+df_pred_val['pred_class'] = df_pred_val[0].map(get_label_name)
+
+df_pred_val = df_pred_val.sort_values(by= 'real')
+df_pred_val.to_csv("./test_models_results/val_" + model_name + "results.csv", header=True)
 
 
-# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
+grs = df_pred_val.groupby('real')
+grs_summary = grs.mean()
+grs_summary['count'] = grs.count()[0]
+grs_summary['class_real'] = grs_summary.index.map(get_label_name)
+grs_summary = grs_summary.sort_values(by="state_prediction")
 
 
-
-#
-# batches_path = './train_data/batches/spanish'
-# n_batch = 1  # Batch to train
-#
-# file_model_name = "spanish_cnn_32_64_lstm_200_b_" + str(n_batch)
-#
-# print("Reading train batch and val SPANISH")
-# print("Reading validation")
-# x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
-# x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
-#
-# y_val0 = np.load(batches_path + '/' + 'y_val' + str(0) + '.npy')
-# y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
-#
-# x_val = np.concatenate((x_val0, x_val1))
-# y_val = np.concatenate((y_val0, y_val1))
-#
-# print("Reading batch")
-# start = time.time()
-# x_train = np.load(batches_path + '/' + 'x_train_' + str(n_batch) + '.npy')
-# y_train = np.load(batches_path + '/' + 'y_train_' + str(n_batch) + '.npy')
-# stop = time.time()
-# print(stop - start)
-
-
-
-
-
-
-
-
-#
-# # Common operation
-# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-# print(model.summary())
-#
-# # Create Callback
-# early_stop = EarlyStopping(monitor='val_loss',
-#                            min_delta=0,
-#                            patience=4,
-#                            verbose=1)
-#
-# csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
-#
-# # Train
-# fit_data = model.fit(x_train, y_train,
-#                      validation_data=[x_val, y_val],
-#                      epochs=20,
-#                      batch_size=128,
-#                      verbose=2,
-#                      callbacks=[early_stop, csv_logger])
-#
-#
-# print('Predicting data-------')
-# pred = model.predict(x_val)
-# df_pred = pd.DataFrame(argmax(pred, 1))
-# df_pred['real'] = argmax(y_val, 1)
-# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
-
-#
-# # Save model
-# print('Saving the Model')
-# model_json = model.to_json()
-# # file_model_name = "spanish_cnn_1_32_lstm_120_b_" + str(n_batch)
-# with open('./models/spanish/' + file_model_name + '.json', "w") as json_file:
-#     json_file.write(model_json)
-# # serialize weights to HDF5
-# model.save_weights('./models/spanish/' + file_model_name + '.h5')
-#
+grs_summary.to_csv("./test_models_results/summary_" + model_name + "results.csv", header=True)
