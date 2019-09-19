@@ -21,7 +21,9 @@ np.random.seed(1337)  # for reproducibility
 batches_path = './train_data/batches/portuguese'
 n_batch = 1  # Batch to train
 
-file_model_name = "portuguese_cnn_64_128_lstm_200_b_" + str(n_batch)
+model_name_base = "portuguese_cnn_64_128_lstm_200_b_"
+
+file_model_name = model_name_base + str(n_batch)
 
 print("Reading train batch and val portuguese")
 print("Reading validation")
@@ -43,7 +45,7 @@ print(stop - start)
 
 
 # print("Loading Model")
-model_name = "portuguese_cnn_32_64_lstm_200_b_" + str(n_batch - 1)
+model_name = model_name_base + str(n_batch - 1)
 print("Loading model: " + model_name)
 # load json and create model
 json_file = open('./models/portuguese/' + model_name + '.json', 'r')
