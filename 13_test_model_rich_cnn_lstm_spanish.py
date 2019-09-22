@@ -23,6 +23,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 np.random.seed(1337)  # for reproducibility
 
 # Analysis using n_batch
+model_name_base = "spanish_cnn_32_64_lstm_200_b_"
 n_batch = 3
 
 # Read Test
@@ -43,7 +44,7 @@ with open('./binarizer/binarizer_spanish.pickle', 'rb') as handle:
 
 # Loading Model
 print("Loading Model")
-model_name = "spanish_cnn_32_64_lstm_200_b_" + str(n_batch)
+model_name = model_name_base + str(n_batch)
 print("Loading model: " + model_name)
 # load json and create model
 json_file = open('./models/spanish/' + model_name + '.json', 'r')

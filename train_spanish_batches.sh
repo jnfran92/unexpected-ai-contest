@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+source /home/juan_francisco_chango/envs/tf-gpu/bin/activate
+python3 10_continue_train_model_rich_cnn_lstm_spanish.py 10
+python3 10_continue_train_model_rich_cnn_lstm_spanish.py 11
+python3 10_continue_train_model_rich_cnn_lstm_spanish.py 12
+python3 10_continue_train_model_rich_cnn_lstm_spanish.py 13
+python3 10_continue_train_model_rich_cnn_lstm_spanish.py 14
+python3 10_continue_train_model_rich_cnn_lstm_spanish.py 15

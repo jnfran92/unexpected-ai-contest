@@ -1,5 +1,6 @@
 import os
 import pickle
+import sys
 import time
 
 import numpy as np
@@ -14,12 +15,20 @@ from numpy import argmax
 from keras.models import model_from_json
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 np.random.seed(1337)  # for reproducibility
 
 batches_path = './train_data/batches/portuguese'
-n_batch = 1  # Batch to train
+# n_batch = 1  # Batch to train
+
+if (len(sys.argv)) < 2:
+    print('ERROR: Args error, 1 args needed')
+    sys.exit()
+
+n_batch = sys.argv[1]
+
+print("n_batch to train PORTUGUESE:  " + str(n_batch))
 
 model_name_base = "portuguese_cnn_64_128_lstm_200_b_"
 
@@ -63,7 +72,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=4,
+                           patience=6,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
