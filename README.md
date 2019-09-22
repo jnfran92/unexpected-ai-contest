@@ -16,6 +16,10 @@ On Mac:
      cd train_chunks
      for i in *; do mv "$i" "$i.csv"; done
 
+## Bash Launch
+
+        nohup bash ./train_spanish_batches.sh > spanish_log.out & 
+        nohup bash ./train_portuguese_batches.sh > portuguese_log.out & 
 
 ## Observations
 
