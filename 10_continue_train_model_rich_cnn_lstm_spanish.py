@@ -30,7 +30,7 @@ if (len(sys.argv)) < 2:
 n_batch = sys.argv[1]
 print("n_batch to train SPANISH:  " + str(n_batch))
 
-model_name_base = "spanish_cnn_256_128_64_lstm_250_b_6"
+model_name_base = "spanish_cnn_256_128_64_lstm_250_b_"
 
 file_model_name = model_name_base + str(n_batch)
 
