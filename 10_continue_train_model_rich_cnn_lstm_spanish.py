@@ -27,7 +27,7 @@ if (len(sys.argv)) < 2:
     print('ERROR: Args error, 1 args needed')
     sys.exit()
 
-n_batch = sys.argv[1]
+n_batch = int(sys.argv[1])
 print("n_batch to train SPANISH:  " + str(n_batch))
 
 model_name_base = "spanish_cnn_256_128_64_lstm_250_b_"
