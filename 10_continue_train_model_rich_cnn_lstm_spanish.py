@@ -85,18 +85,18 @@ fit_data = model.fit(x_train, y_train,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
-
-print('Predicting data-------')
-pred = model.predict(x_val)
-df_pred = pd.DataFrame(argmax(pred, 1))
-df_pred['real'] = argmax(y_val, 1)
-print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
+#
+# print('Predicting data-------')
+# pred = model.predict(x_val)
+# df_pred = pd.DataFrame(argmax(pred, 1))
+# df_pred['real'] = argmax(y_val, 1)
+# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
 
 
 # Save model
 print('Saving the Model')
 model_json = model.to_json()
-# file_model_name = "spanish_cnn_1_32_lstm_120_b_" + str(n_batch)
+
 with open('./models/spanish/' + file_model_name + '.json', "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5

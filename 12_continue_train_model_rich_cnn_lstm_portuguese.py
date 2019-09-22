@@ -85,13 +85,13 @@ fit_data = model.fit(x_train, y_train,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
-
-print('Predicting data-------')
-pred = model.predict(x_val)
-df_pred = pd.DataFrame(argmax(pred, 1))
-df_pred['real'] = argmax(y_val, 1)
-print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
-
+#
+# print('Predicting data-------')
+# pred = model.predict(x_val)
+# df_pred = pd.DataFrame(argmax(pred, 1))
+# df_pred['real'] = argmax(y_val, 1)
+# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
+#
 
 # Save model
 print('Saving the Model')
