@@ -6,6 +6,6 @@ python3 10_continue_train_model_rich_cnn_lstm_spanish.py 13
 python3 10_continue_train_model_rich_cnn_lstm_spanish.py 14
 python3 10_continue_train_model_rich_cnn_lstm_spanish.py 15
 python3 10_continue_train_model_rich_cnn_lstm_spanish.py 16
-python3 10_continue_train_model_rich_cnn_lstm_spanish.py 17
-python3 10_continue_train_model_rich_cnn_lstm_spanish.py 18
-python3 10_continue_train_model_rich_cnn_lstm_spanish.py 19
+#python3 10_continue_train_model_rich_cnn_lstm_spanish.py 17
+#python3 10_continue_train_model_rich_cnn_lstm_spanish.py 18
+#python3 10_continue_train_model_rich_cnn_lstm_spanish.py 19
