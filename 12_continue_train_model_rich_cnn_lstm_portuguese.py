@@ -77,7 +77,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=6,
+                           patience=10,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
