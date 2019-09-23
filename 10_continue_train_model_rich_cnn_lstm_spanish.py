@@ -9,6 +9,7 @@ from keras.layers import Dense, Conv1D, MaxPooling1D
 from keras.layers import Embedding, SpatialDropout1D
 from keras.layers import LSTM
 from keras.models import Sequential
+from keras.optimizers import Adam
 from keras.preprocessing.text import Tokenizer
 import pandas as pd
 from numpy import argmax
@@ -23,12 +24,15 @@ batches_path = './train_data/batches/spanish'
 # n_batch = 1  # Batch to train
 
 
-if (len(sys.argv)) < 2:
-    print('ERROR: Args error, 1 args needed')
+if (len(sys.argv)) < 3:
+    print('ERROR: Args error, 2 args needed')
     sys.exit()
 
 n_batch = int(sys.argv[1])
 print("n_batch to train SPANISH:  " + str(n_batch))
+
+custom_lr = float(sys.argv[2])
+print("Custom Lr SPANISH:  " + str(custom_lr))
 
 model_name_base = "spanish_cnn_256_128_64_lstm_250_b_"
 
@@ -66,7 +70,8 @@ model.load_weights('./models/spanish/' + model_name + ".h5")
 print("Loaded model from disk")
 
 # Common operation
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+adam_opt = Adam(learning_rate=custom_lr, beta_1=0.9, beta_2=0.999, amsgrad=False)
+model.compile(loss='categorical_crossentropy', optimizer=adam_opt, metrics=['accuracy'])
 print(model.summary())
 
 # Create Callback
@@ -81,7 +86,7 @@ csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
                      epochs=20,
-                     batch_size=8,
+                     batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
