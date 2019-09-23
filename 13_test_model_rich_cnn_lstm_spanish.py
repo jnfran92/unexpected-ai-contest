@@ -27,7 +27,8 @@ model_name_base = "spanish_cnn_256_128_64_lstm_250_b_"
 n_batch = 19
 
 # Read Test
-test_data = pd.read_pickle('./data/test_subset_spanish.pkl').reset_index(drop=True)
+# test_data = pd.read_pickle('./data/test_subset_spanish.pkl').reset_index(drop=True)
+test_data = pd.read_pickle('./data/test_subset_spanish.pkl')
 
 print("Reading Tokenizer")
 t = Tokenizer()
