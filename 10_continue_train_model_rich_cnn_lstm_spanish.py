@@ -70,7 +70,8 @@ model.load_weights('./models/spanish/' + model_name + ".h5")
 print("Loaded model from disk")
 
 # Common operation
-adam_opt = Adam(learning_rate=custom_lr, beta_1=0.9, beta_2=0.999, amsgrad=False)
+# adam_opt = Adam(learning_rate=custom_lr, beta_1=0.9, beta_2=0.999, amsgrad=False)
+adam_opt = Adam(lr=custom_lr, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
 model.compile(loss='categorical_crossentropy', optimizer=adam_opt, metrics=['accuracy'])
 print(model.summary())
 
