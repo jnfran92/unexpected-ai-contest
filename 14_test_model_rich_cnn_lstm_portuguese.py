@@ -23,22 +23,22 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 np.random.seed(1337)  # for reproducibility
 
 # Analysis using n_batch
-model_name_base = "spanish_cnn_256_128_64_lstm_250_b_"
-n_batch = 19
+model_name_base = "portuguese_cnn_64_128_lstm_200_b_"
+n_batch = 17
 
 # Read Test
-test_data = pd.read_pickle('./data/test_subset_spanish.pkl').reset_index(drop=True)
+test_data = pd.read_pickle('./data/test_subset_portuguese.pkl').reset_index(drop=True)
 
 print("Reading Tokenizer")
 t = Tokenizer()
 print("Loading the tokenizer")
-with open('./tokenizer/tokenizer_spanish.pickle', 'rb') as handle:
+with open('./tokenizer/tokenizer_portuguese.pickle', 'rb') as handle:
     t = pickle.load(handle)
 
 
 print("Reading Binarizer")
 lb_style = LabelBinarizer()
-with open('./binarizer/binarizer_spanish.pickle', 'rb') as handle:
+with open('./binarizer/binarizer_portuguese.pickle', 'rb') as handle:
     lb_style = pickle.load(handle)
 
 
@@ -47,12 +47,12 @@ print("Loading Model")
 model_name = model_name_base + str(n_batch)
 print("Loading model: " + model_name)
 # load json and create model
-json_file = open('./models/spanish/' + model_name + '.json', 'r')
+json_file = open('./models/portuguese/' + model_name + '.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 model = model_from_json(loaded_model_json)
 # load weights into new model
-model.load_weights('./models/spanish/' + model_name + ".h5")
+model.load_weights('./models/portuguese/' + model_name + ".h5")
 print("Loaded model from disk")
 print(model.summary())
 
@@ -81,15 +81,14 @@ out_data.columns = ['category']
 # out_data.index.name = 'id'
 out_data['id'] = test_data['id']
 
-
 out_data['title'] = test_data['text_cleaned']
 
 out_data.to_csv("./test_models_results/test_" + model_name + "results.csv", header=True)
 
 # Summary data and errors
 print("Summarizing data using Validation Data")
-print("Reading validation SPANISH")
-batches_path = './train_data/batches/spanish'
+print("Reading validation portuguese")
+batches_path = './train_data/batches/portuguese'
 x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
 x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
 
