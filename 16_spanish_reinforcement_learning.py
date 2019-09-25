@@ -48,5 +48,13 @@ print("Reading pkl SPANISH")
 start = time.time()
 train_data = pd.read_pickle('./data/train_subset_spanish.pkl')
 
+condition_all_data = train_data['category'] == reinforce_subset_cats[0]
+for k in range(1,len(reinforce_subset_cats)):
+    # print(k)
+    condition_all_data |= (train_data['category'] == reinforce_subset_cats[k])
 
-train_data['category']
+
+
+condition_all_data = train_data['category'] == reinforce_subset_cats[0]
+
+train_data[condition_all_data]
