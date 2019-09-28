@@ -7,6 +7,7 @@ from keras.callbacks import EarlyStopping, CSVLogger
 from keras.layers import Dense, Conv1D, MaxPooling1D
 from keras.layers import Embedding, SpatialDropout1D
 from keras.layers import LSTM
+from keras.optimizers import Adam
 from keras.models import Sequential
 from keras.preprocessing.text import Tokenizer
 import pandas as pd
@@ -54,7 +55,7 @@ print("Creating Model")
 # The maximum number of words to be used. (most frequent)
 MAX_NB_WORDS = max_num_words_vocabulary
 # This is fixed.
-EMBEDDING_DIM = int(MAX_NB_WORDS*(5/5))
+EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
@@ -66,7 +67,10 @@ model.add(SpatialDropout1D(0.2))
 # model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(250))
 model.add(Dense(y_train.shape[1], activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+adam_opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
+model.compile(loss='categorical_crossentropy', optimizer=adam_opt, metrics=['accuracy'])
 
 print(model.summary())
 
