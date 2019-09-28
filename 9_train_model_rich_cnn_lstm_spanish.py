@@ -64,7 +64,7 @@ model.add(SpatialDropout1D(0.2))
 # model.add(MaxPooling1D(pool_size=2))
 # model.add(Conv1D(filters=32, kernel_size=8, padding='same', activation='relu'))
 # model.add(MaxPooling1D(pool_size=2))
-model.add(LSTM(200))
+model.add(LSTM(250))
 model.add(Dense(y_train.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -73,7 +73,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=3,
+                           patience=6,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
@@ -82,7 +82,7 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
                      epochs=10,
-                     batch_size=64,
+                     batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
