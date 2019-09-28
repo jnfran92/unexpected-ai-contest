@@ -43,7 +43,6 @@ print('Count subset: ' + str(subset['count'].sum()))
 reinforce_subset_cats = subset['class_real']
 
 
-
 print("Reading pkl SPANISH")
 start = time.time()
 train_data = pd.read_pickle('./data/train_subset_spanish.pkl')
@@ -55,6 +54,11 @@ for k in range(1,len(reinforce_subset_cats)):
 
 
 
-condition_all_data = train_data['category'] == reinforce_subset_cats[0]
+# condition_all_data
 
-train_data[condition_all_data]
+
+train_data_subset = train_data[condition_all_data]
+print("Data subset size: " + str(len(train_data_subset)))
+
+
+
