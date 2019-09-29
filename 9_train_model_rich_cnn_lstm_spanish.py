@@ -60,18 +60,10 @@ EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=256, kernel_size=8, padding='same', activation='relu'))
-# model.add(MaxPooling1D(pool_size=2))
+model.add(Conv1D(filters=1024, kernel_size=8, padding='same', activation='relu'))
 model.add(GlobalMaxPooling1D())
-#
-# model.add(Conv1D(filters=128, kernel_size=4, padding='same', activation='relu'))
-# model.add(MaxPooling1D(pool_size=2))
-# model.add(Conv1D(filters=64, kernel_size=3, padding='same', activation='relu'))
-# model.add(MaxPooling1D(pool_size=2))
 
-
-# model.add(LSTM(250))
-model.add(Dense(128))
+model.add(Dense(1024))
 model.add(Dropout(0.2))
 model.add(Activation('relu'))
 
@@ -93,7 +85,7 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=10,
+                     epochs=30,
                      batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])

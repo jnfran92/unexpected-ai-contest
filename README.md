@@ -66,6 +66,21 @@ On Mac:
         model.add(Dense(y_train.shape[1], activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
         
+        
+- Best MODEL  74%,  10 epochs 1 batch:
+
+    
+        model = Sequential()
+        model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
+        model.add(SpatialDropout1D(0.2))
+        model.add(Conv1D(filters=256, kernel_size=8, padding='same', activation='relu'))
+        model.add(GlobalMaxPooling1D())
+        model.add(Dense(128))
+        model.add(Dropout(0.2))
+        model.add(Activation('relu'))
+        
+        model.add(Dense(y_train.shape[1], activation='softmax'))
+        
 
 ## Requirements
 
