@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 from keras.callbacks import EarlyStopping, CSVLogger
-from keras.layers import Dense, Conv1D, MaxPooling1D
+from keras.layers import Dense, Conv1D, MaxPooling1D, Dropout, Activation
 from keras.layers import Embedding, SpatialDropout1D
 from keras.layers import LSTM
 from keras.optimizers import Adam
@@ -21,7 +21,7 @@ np.random.seed(1337)  # for reproducibility
 batches_path = './train_data/batches/spanish'
 n_batch = 0  # Batch to train
 
-model_name = "spanish_lstm_200_b_"
+model_name = "spanish_cnn_dense_b_"
 
 print("Reading train batch and val SPANISH")
 print("Reading validation")
@@ -60,17 +60,24 @@ EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
+model.add(Conv1D(filters=256, kernel_size=4, padding='same', activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
 #
-# model.add(Conv1D(filters=64, kernel_size=16, padding='same', activation='relu'))
+# model.add(Conv1D(filters=128, kernel_size=4, padding='same', activation='relu'))
 # model.add(MaxPooling1D(pool_size=2))
-# model.add(Conv1D(filters=32, kernel_size=8, padding='same', activation='relu'))
+# model.add(Conv1D(filters=64, kernel_size=3, padding='same', activation='relu'))
 # model.add(MaxPooling1D(pool_size=2))
-model.add(LSTM(250))
-model.add(Dense(y_train.shape[1], activation='softmax'))
-# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-adam_opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
-model.compile(loss='categorical_crossentropy', optimizer=adam_opt, metrics=['accuracy'])
+
+# model.add(LSTM(250))
+model.add(Dense(128))
+model.add(Dropout(0.2))
+model.add(Activation('relu'))
+
+model.add(Dense(y_train.shape[1], activation='softmax'))
+
+# adam_opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 print(model.summary())
 
