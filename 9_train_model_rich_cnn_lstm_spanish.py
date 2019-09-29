@@ -55,12 +55,12 @@ print("Creating Model")
 # The maximum number of words to be used. (most frequent)
 MAX_NB_WORDS = max_num_words_vocabulary
 # This is fixed.
-EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
+EMBEDDING_DIM = int(MAX_NB_WORDS*(7/8))
 
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=256, kernel_size=4, padding='same', activation='relu'))
+model.add(Conv1D(filters=256, kernel_size=2, padding='same', activation='relu'))
 # model.add(MaxPooling1D(pool_size=2))
 model.add(GlobalMaxPooling1D())
 #
@@ -71,7 +71,7 @@ model.add(GlobalMaxPooling1D())
 
 
 # model.add(LSTM(250))
-model.add(Dense(128))
+model.add(Dense(256))
 model.add(Dropout(0.2))
 model.add(Activation('relu'))
 
@@ -93,17 +93,17 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=10,
+                     epochs=30,
                      batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
-
-print('Predicting data-------')
-pred = model.predict(x_val)
-df_pred = pd.DataFrame(argmax(pred, 1))
-df_pred['real'] = argmax(y_val, 1)
-print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
+#
+# print('Predicting data-------')
+# pred = model.predict(x_val)
+# df_pred = pd.DataFrame(argmax(pred, 1))
+# df_pred['real'] = argmax(y_val, 1)
+# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
 
 
 # Save model
