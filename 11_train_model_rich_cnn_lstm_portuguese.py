@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 from keras.callbacks import EarlyStopping, CSVLogger
-from keras.layers import Dense, Conv1D, MaxPooling1D
+from keras.layers import Dense, Conv1D, MaxPooling1D, GlobalMaxPooling1D, Dropout, Activation
 from keras.layers import Embedding, SpatialDropout1D
 from keras.layers import LSTM
 from keras.models import Sequential
@@ -55,24 +55,46 @@ print("Creating Model portuguese")
 MAX_NB_WORDS = max_num_words_vocabulary
 # This is fixed.
 EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
+#
+# model = Sequential()
+# model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
+# model.add(SpatialDropout1D(0.2))
+# model.add(Conv1D(filters=128, kernel_size=16, padding='same', activation='relu'))
+# model.add(MaxPooling1D(pool_size=2))
+# model.add(Conv1D(filters=64, kernel_size=8, padding='same', activation='relu'))
+# model.add(MaxPooling1D(pool_size=2))
+# model.add(LSTM(200))
+# model.add(Dense(y_train.shape[1], activation='softmax'))
+# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=128, kernel_size=16, padding='same', activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-model.add(Conv1D(filters=64, kernel_size=8, padding='same', activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-model.add(LSTM(200))
+model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
+model.add(GlobalMaxPooling1D())
+
+
+model.add(Dense(2048))
+model.add(Dropout(0.2))
+model.add(Activation('relu'))
+
+# model.add(Dense(1024))
+# model.add(Dropout(0.2))
+# model.add(Activation('relu'))
+
 model.add(Dense(y_train.shape[1], activation='softmax'))
+
+# adam_opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 
 print(model.summary())
 
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=3,
+                           patience=6,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
@@ -80,17 +102,17 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=20,
+                     epochs=30,
                      batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
-
-print('Predicting data-------')
-pred = model.predict(x_val)
-df_pred = pd.DataFrame(argmax(pred, 1))
-df_pred['real'] = argmax(y_val, 1)
-print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
+#
+# print('Predicting data-------')
+# pred = model.predict(x_val)
+# df_pred = pd.DataFrame(argmax(pred, 1))
+# df_pred['real'] = argmax(y_val, 1)
+# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
 
 
 # Save model
