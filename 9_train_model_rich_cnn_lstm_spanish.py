@@ -67,10 +67,6 @@ model.add(Dense(2048))
 model.add(Dropout(0.2))
 model.add(Activation('relu'))
 
-model.add(Dense(2048))
-model.add(Dropout(0.2))
-model.add(Activation('relu'))
-
 model.add(Dense(y_train.shape[1], activation='softmax'))
 
 # adam_opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
