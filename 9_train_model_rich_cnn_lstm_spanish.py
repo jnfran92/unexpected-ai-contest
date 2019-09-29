@@ -60,10 +60,10 @@ EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=1024, kernel_size=8, padding='same', activation='relu'))
+model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
 model.add(GlobalMaxPooling1D())
 
-model.add(Dense(1024))
+model.add(Dense(2048))
 model.add(Dropout(0.2))
 model.add(Activation('relu'))
 
@@ -77,7 +77,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=6,
+                           patience=10,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
