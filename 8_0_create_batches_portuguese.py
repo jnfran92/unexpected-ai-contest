@@ -35,7 +35,7 @@ np.save(batches_path + '/' + 'x_val' + str(n_part) + '.npy', x_val)
 np.save(batches_path + '/' + 'y_val' + str(n_part) + '.npy', y_val)
 
 # Creating batches
-n_batches = 10
+n_batches = 5
 
 x_train_batches = np.array_split(x_train, n_batches)
 y_train_batches = np.array_split(y_train, n_batches)
