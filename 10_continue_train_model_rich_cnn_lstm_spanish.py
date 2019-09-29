@@ -35,7 +35,7 @@ print("n_batch to train SPANISH:  " + str(n_batch))
 custom_lr = float(sys.argv[2])
 print("Custom Lr SPANISH:  " + str(custom_lr))
 
-model_name_base = "spanish_cnn_256_128_64_lstm_250_b_"
+model_name_base = "spanish_cnn_dense_b_"
 
 file_model_name = model_name_base + str(n_batch)
 
@@ -79,7 +79,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=10,
+                           patience=4,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
@@ -87,7 +87,7 @@ csv_logger = CSVLogger(filename="./logs/" + file_model_name + ".csv")
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=20,
+                     epochs=15,
                      batch_size=128,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])

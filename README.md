@@ -83,19 +83,19 @@ On Mac:
         
 
 - *BEST* Model 80% val acc with 5 Epochs (Portuguese) using the first batch(n=0):
-
-
-    model = Sequential()
-    model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
-    model.add(SpatialDropout1D(0.2))
-    model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
-    model.add(GlobalMaxPooling1D())
     
-    model.add(Dense(2048))
-    model.add(Dropout(0.2))
-    model.add(Activation('relu'))
     
-    model.add(Dense(y_train.shape[1], activation='softmax'))        
+        model = Sequential()
+        model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
+        model.add(SpatialDropout1D(0.2))
+        model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
+        model.add(GlobalMaxPooling1D())
+        
+        model.add(Dense(2048))
+        model.add(Dropout(0.2))
+        model.add(Activation('relu'))
+        
+        model.add(Dense(y_train.shape[1], activation='softmax'))        
 
 ## Requirements
 
