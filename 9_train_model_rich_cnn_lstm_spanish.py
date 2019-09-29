@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 from keras.callbacks import EarlyStopping, CSVLogger
-from keras.layers import Dense, Conv1D, MaxPooling1D, Dropout, Activation
+from keras.layers import Dense, Conv1D, MaxPooling1D, Dropout, Activation, GlobalMaxPooling1D
 from keras.layers import Embedding, SpatialDropout1D
 from keras.layers import LSTM
 from keras.optimizers import Adam
@@ -61,7 +61,8 @@ model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
 model.add(Conv1D(filters=256, kernel_size=4, padding='same', activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
+# model.add(MaxPooling1D(pool_size=2))
+model.add(GlobalMaxPooling1D())
 #
 # model.add(Conv1D(filters=128, kernel_size=4, padding='same', activation='relu'))
 # model.add(MaxPooling1D(pool_size=2))
