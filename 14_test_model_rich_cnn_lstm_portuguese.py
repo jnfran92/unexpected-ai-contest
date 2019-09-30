@@ -23,8 +23,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 np.random.seed(1337)  # for reproducibility
 
 # Analysis using n_batch
-model_name_base = "portuguese_cnn_64_128_lstm_200_b_"
-n_batch = 17
+model_name_base = " portuguese_cnn_dense_b_"
+n_batch = 5
 
 # Read Test
 test_data = pd.read_pickle('./data/test_subset_portuguese.pkl').reset_index(drop=True)

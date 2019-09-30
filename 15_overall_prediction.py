@@ -11,7 +11,7 @@ from libs.cleaning import custom_text_format
 
 np.random.seed(1337)  # for reproducibility
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # Read data
 folder_path = './test_models_results'
