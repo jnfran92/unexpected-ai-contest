@@ -21,7 +21,7 @@ np.random.seed(1337)  # for reproducibility
 batches_path = './train_data/batches/spanish'
 n_batch = 0  # Batch to train
 
-model_name = "spanish_cnn_dense_b_"
+model_name = "spanish_cnn_dense_2_b_"
 
 print("Reading train batch and val SPANISH")
 print("Reading validation")
@@ -60,6 +60,9 @@ EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
+model.add(Conv1D(filters=4196, kernel_size=16, padding='same', activation='relu'))
+model.add(GlobalMaxPooling1D())
+
 model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
 model.add(GlobalMaxPooling1D())
 
@@ -77,7 +80,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=4,
+                           patience=6,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")

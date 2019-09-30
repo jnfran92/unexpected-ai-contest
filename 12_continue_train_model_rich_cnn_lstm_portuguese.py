@@ -34,7 +34,7 @@ print("n_batch to train PORTUGUESE:  " + str(n_batch))
 custom_lr = float(sys.argv[2])
 print("Custom Lr PORTUGUESE:  " + str(custom_lr))
 
-model_name_base = "portuguese_cnn_dense_b_"
+model_name_base = "portuguese_cnn_dense_2_b_"
 
 file_model_name = model_name_base + str(n_batch)
 

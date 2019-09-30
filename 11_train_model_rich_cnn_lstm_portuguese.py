@@ -20,7 +20,7 @@ np.random.seed(1337)  # for reproducibility
 batches_path = './train_data/batches/portuguese'
 n_batch = 0  # Batch to train
 
-model_name = "portuguese_cnn_dense_b_"
+model_name = "portuguese_cnn_dense_2_b_"
 
 print("Reading train batch and val PORTUGUESE")
 print("Reading validation")
@@ -62,7 +62,6 @@ model.add(SpatialDropout1D(0.2))
 model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
 model.add(GlobalMaxPooling1D())
 
-
 model.add(Dense(2048))
 model.add(Dropout(0.2))
 model.add(Activation('relu'))
@@ -78,7 +77,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=4,
+                           patience=6,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
