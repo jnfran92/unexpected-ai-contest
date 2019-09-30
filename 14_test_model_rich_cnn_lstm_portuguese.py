@@ -18,7 +18,7 @@ from numpy import argmax
 from keras.models import model_from_json
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 np.random.seed(1337)  # for reproducibility
 
