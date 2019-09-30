@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 np.random.seed(1337)  # for reproducibility
 
@@ -35,7 +35,7 @@ np.save(batches_path + '/' + 'x_val' + str(n_part) + '.npy', x_val)
 np.save(batches_path + '/' + 'y_val' + str(n_part) + '.npy', y_val)
 
 # Creating batches
-n_batches = 5
+n_batches = 3
 
 x_train_batches = np.array_split(x_train, n_batches)
 y_train_batches = np.array_split(y_train, n_batches)
