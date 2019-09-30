@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 from keras.callbacks import EarlyStopping, CSVLogger
-from keras.layers import Dense, Conv1D, MaxPooling1D, Dropout, Activation, GlobalMaxPooling1D, Flatten
+from keras.layers import Dense, Conv1D, MaxPooling1D, Dropout, Activation, GlobalMaxPooling1D
 from keras.layers import Embedding, SpatialDropout1D
 from keras.layers import LSTM
 from keras.optimizers import Adam
@@ -60,19 +60,8 @@ EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=512, kernel_size=16, padding='same', activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-
-model.add(Conv1D(filters=512, kernel_size=8, padding='same', activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-
-model.add(Conv1D(filters=128, kernel_size=4, padding='same', activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-
-
-model.add(Dropout(0.5))
-model.add(MaxPooling1D(pool_size=2))
-model.add(Flatten())
+model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
+model.add(GlobalMaxPooling1D())
 
 model.add(Dense(2048))
 model.add(Dropout(0.2))
@@ -97,7 +86,7 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
                      epochs=15,
-                     batch_size=128,
+                     batch_size=32,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
