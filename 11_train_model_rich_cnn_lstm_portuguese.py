@@ -55,25 +55,16 @@ print("Creating Model portuguese")
 MAX_NB_WORDS = max_num_words_vocabulary
 # This is fixed.
 EMBEDDING_DIM = int(MAX_NB_WORDS*(4/5))
-#
-# model = Sequential()
-# model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
-# model.add(SpatialDropout1D(0.2))
-# model.add(Conv1D(filters=128, kernel_size=16, padding='same', activation='relu'))
-# model.add(MaxPooling1D(pool_size=2))
-# model.add(Conv1D(filters=64, kernel_size=8, padding='same', activation='relu'))
-# model.add(MaxPooling1D(pool_size=2))
-# model.add(LSTM(200))
-# model.add(Dense(y_train.shape[1], activation='softmax'))
-# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
 
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
+model.add(Conv1D(filters=3048, kernel_size=8, padding='same', activation='relu'))
 model.add(GlobalMaxPooling1D())
 
+model.add(Dense(3048))
+model.add(Dropout(0.2))
+model.add(Activation('relu'))
 
 model.add(Dense(2048))
 model.add(Dropout(0.2))
