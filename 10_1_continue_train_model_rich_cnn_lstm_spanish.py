@@ -25,14 +25,14 @@ batches_path = './train_data/batches/spanish'
 # n_batch = 1  # Batch to train
 
 
-if (len(sys.argv)) < 5:
-    print('ERROR: Args error, 4 args needed')
+if (len(sys.argv)) < 6:
+    print('ERROR: Args error, 5 args needed')
     sys.exit()
 
 # n_batch = int(sys.argv[1])
 # print("n_batch to train SPANISH:  " + str(n_batch))
 
-# python3 10_1_continue_train_model_rich_cnn_lstm_spanish.py 0 5 6 0.0001
+# nohup python3 10_1_continue_train_model_rich_cnn_lstm_spanish.py 0 5 6 0.0001 > new_train_log.out &
 
 n_batch = int(sys.argv[1])
 print("n specific batch to train SPANISH:  " + str(n_batch))
