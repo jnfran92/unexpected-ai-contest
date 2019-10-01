@@ -24,7 +24,7 @@ np.random.seed(1337)  # for reproducibility
 
 # Analysis using n_batch
 model_name_base = "spanish_cnn_dense_2_b_"
-n_batch = 7
+n_batch = 8
 
 # Read Test
 # test_data = pd.read_pickle('./data/test_subset_spanish.pkl').reset_index(drop=True)
