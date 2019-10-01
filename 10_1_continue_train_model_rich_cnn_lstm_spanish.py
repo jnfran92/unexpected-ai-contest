@@ -25,7 +25,7 @@ batches_path = './train_data/batches/spanish'
 # n_batch = 1  # Batch to train
 
 
-if (len(sys.argv)) < 4:
+if (len(sys.argv)) < 5:
     print('ERROR: Args error, 4 args needed')
     sys.exit()
 
@@ -33,19 +33,22 @@ if (len(sys.argv)) < 4:
 # print("n_batch to train SPANISH:  " + str(n_batch))
 
 
-n_last_batch = int(sys.argv[1])
-print("n_batch LAST to train SPANISH:  " + str(n_last_batch))
+n_batch = int(sys.argv[1])
+print("n specific batch to train SPANISH:  " + str(n_batch))
 
-n_batch = int(sys.argv[2])
-print("n_batch ACTUAL to train SPANISH:  " + str(n_batch))
+n_model = int(sys.argv[2])
+print("n model to re-force ACTUAL to train SPANISH:  " + str(n_model))
 
-custom_lr = float(sys.argv[3])
+out_model = int(sys.argv[3])
+print("Out model label trained SPANISH:  " + str(out_model))
+
+custom_lr = float(sys.argv[4])
 print("Custom Lr SPANISH:  " + str(custom_lr))
 
 
 model_name_base = "spanish_cnn_dense_2_b_"
 
-file_model_name = model_name_base + str(n_batch)
+file_model_name = model_name_base + str(n_model)
 
 print("Reading train batch and val SPANISH")
 print("Reading validation")
@@ -60,14 +63,14 @@ y_val = np.concatenate((y_val0, y_val1))
 
 print("Reading batch")
 start = time.time()
-x_train = np.load(batches_path + '/' + 'x_train_' + str(n_batch) + '.npy')
-y_train = np.load(batches_path + '/' + 'y_train_' + str(n_batch) + '.npy')
+x_train = np.load(batches_path + '/' + 'x_train_' + str(n_model) + '.npy')
+y_train = np.load(batches_path + '/' + 'y_train_' + str(n_model) + '.npy')
 stop = time.time()
 print(stop - start)
 
 
 # print("Loading Model")
-model_name = model_name_base + str(n_batch - 1)
+model_name = model_name_base + str(n_model - 1)
 print("Loading model: " + model_name)
 # load json and create model
 json_file = open('./models/spanish/' + model_name + '.json', 'r')
