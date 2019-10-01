@@ -25,8 +25,8 @@ batches_path = './train_data/batches/spanish'
 # n_batch = 1  # Batch to train
 
 
-if (len(sys.argv)) < 6:
-    print('ERROR: Args error, 5 args needed')
+if (len(sys.argv)) < 5:
+    print('ERROR: Args error, 4 args needed')
     sys.exit()
 
 # n_batch = int(sys.argv[1])
