@@ -11,8 +11,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # Read data
 folder_path = './test_models_results'
 
-spanish_name = 'test_spanish_cnn_dense_b_6results'
-portuguese_name = 'test_portuguese_cnn_dense_b_5results'
+spanish_name = 'test_spanish_cnn_dense_2_b_7results'
+portuguese_name = 'test_portuguese_cnn_dense_2_b_6results'
 
 d_spanish = pd.read_csv(folder_path + '/' + spanish_name + '.csv')
 d_portuguese = pd.read_csv(folder_path + '/' + portuguese_name + '.csv')
