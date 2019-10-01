@@ -99,25 +99,26 @@ y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
 x_val = np.concatenate((x_val0, x_val1))
 y_val = np.concatenate((y_val0, y_val1))
 
-print('Predicting data-------')
-pred_val = model.predict(x_val)
-
-df_pred_val = pd.DataFrame(argmax(pred_val, 1))
-df_pred_val['real'] = argmax(y_val, 1)
-df_pred_val['state_prediction'] = df_pred_val[0] == df_pred_val['real']
-df_pred_val['text'] = t.sequences_to_texts(x_val)
-df_pred_val['real_class'] = df_pred_val['real'].map(get_label_name)
-df_pred_val['pred_class'] = df_pred_val[0].map(get_label_name)
-
-df_pred_val = df_pred_val.sort_values(by= 'real')
-df_pred_val.to_csv("./test_models_results/val_" + model_name + "results.csv", header=True)
-
-
-grs = df_pred_val.groupby('real')
-grs_summary = grs.mean()
-grs_summary['count'] = grs.count()[0]
-grs_summary['class_real'] = grs_summary.index.map(get_label_name)
-grs_summary = grs_summary.sort_values(by="state_prediction")
-
-
-grs_summary.to_csv("./test_models_results/summary_" + model_name + "results.csv", header=True)
+#
+# print('Predicting data-------')
+# pred_val = model.predict(x_val)
+#
+# df_pred_val = pd.DataFrame(argmax(pred_val, 1))
+# df_pred_val['real'] = argmax(y_val, 1)
+# df_pred_val['state_prediction'] = df_pred_val[0] == df_pred_val['real']
+# df_pred_val['text'] = t.sequences_to_texts(x_val)
+# df_pred_val['real_class'] = df_pred_val['real'].map(get_label_name)
+# df_pred_val['pred_class'] = df_pred_val[0].map(get_label_name)
+#
+# df_pred_val = df_pred_val.sort_values(by= 'real')
+# df_pred_val.to_csv("./test_models_results/val_" + model_name + "results.csv", header=True)
+#
+#
+# grs = df_pred_val.groupby('real')
+# grs_summary = grs.mean()
+# grs_summary['count'] = grs.count()[0]
+# grs_summary['class_real'] = grs_summary.index.map(get_label_name)
+# grs_summary = grs_summary.sort_values(by="state_prediction")
+#
+#
+# grs_summary.to_csv("./test_models_results/summary_" + model_name + "results.csv", header=True)
