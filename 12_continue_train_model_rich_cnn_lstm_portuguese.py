@@ -71,10 +71,10 @@ print("Loaded model from disk")
 
 # Common operation
 # adam_opt = Adam(learning_rate=custom_lr)
-# adam_opt = Adam(lr=custom_lr, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
-# model.compile(loss='categorical_crossentropy', optimizer=adam_opt, metrics=['accuracy'])
+adam_opt = Adam(lr=custom_lr, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
+model.compile(loss='categorical_crossentropy', optimizer=adam_opt, metrics=['accuracy'])
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 print(model.summary())
 
