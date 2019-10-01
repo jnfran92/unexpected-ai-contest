@@ -84,19 +84,19 @@ out_data['title'] = test_data['text_cleaned']
 out_data['id'] = test_data['id']
 
 out_data.to_csv("./test_models_results/test_" + model_name + "results.csv", header=True)
-
-# Summary data and errors
-print("Summarizing data using Validation Data")
-print("Reading validation portuguese")
-batches_path = './train_data/batches/portuguese'
-x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
-x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
-
-y_val0 = np.load(batches_path + '/' + 'y_val' + str(0) + '.npy')
-y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
-
-x_val = np.concatenate((x_val0, x_val1))
-y_val = np.concatenate((y_val0, y_val1))
+#
+# # Summary data and errors
+# print("Summarizing data using Validation Data")
+# print("Reading validation portuguese")
+# batches_path = './train_data/batches/portuguese'
+# x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
+# x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
+#
+# y_val0 = np.load(batches_path + '/' + 'y_val' + str(0) + '.npy')
+# y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
+#
+# x_val = np.concatenate((x_val0, x_val1))
+# y_val = np.concatenate((y_val0, y_val1))
 
 #
 # print('Predicting data-------')
