@@ -10,3 +10,5 @@ python3 10_continue_train_model_rich_cnn_lstm_spanish.py 2 0.0001
 #python3 10_continue_train_model_rich_cnn_lstm_spanish.py 3 0.0001
 #python3 10_continue_train_model_rich_cnn_lstm_spanish.py 4 0.0001
 #python3 10_continue_train_model_rich_cnn_lstm_spanish.py 5 0.0001
+
+
