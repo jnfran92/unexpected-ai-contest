@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# nohup bash ./final_final_final.sh > final_final_final_log.out &
+# nohup bash ./final_final_final.sh > final_final_final_log_3.out &
 
 source /home/juan_francisco_chango/envs/tf-gpu/bin/activate
 
