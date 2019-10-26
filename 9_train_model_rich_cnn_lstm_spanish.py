@@ -77,7 +77,7 @@ print(model.summary())
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
                            min_delta=0,
-                           patience=6,
+                           patience=10,
                            verbose=1)
 
 csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
@@ -85,8 +85,8 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 # Train
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
-                     epochs=15,
-                     batch_size=1024,
+                     epochs=20,
+                     batch_size=64,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
