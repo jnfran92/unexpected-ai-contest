@@ -1,19 +1,11 @@
 import os
-import pickle
 import sys
 import time
 
 import numpy as np
 from keras.callbacks import EarlyStopping, CSVLogger
-from keras.layers import Dense, Conv1D, MaxPooling1D
-from keras.layers import Embedding, SpatialDropout1D
-from keras.layers import LSTM
-from keras.models import Sequential
-from keras.optimizers import Adam
-from keras.preprocessing.text import Tokenizer
-import pandas as pd
-from numpy import argmax
 from keras.models import model_from_json
+from keras.optimizers import Adam
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
@@ -58,13 +50,16 @@ file_model_name = model_name_base + str(out_model)
 print("Reading train batch and val portuguese")
 print("Reading validation")
 x_val0 = np.load(batches_path + '/' + 'x_val' + str(0) + '.npy')
-x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
+# x_val1 = np.load(batches_path + '/' + 'x_val' + str(1) + '.npy')
 
 y_val0 = np.load(batches_path + '/' + 'y_val' + str(0) + '.npy')
-y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
+# y_val1 = np.load(batches_path + '/' + 'y_val' + str(1) + '.npy')
 
-x_val = np.concatenate((x_val0, x_val1))
-y_val = np.concatenate((y_val0, y_val1))
+# x_val = np.concatenate((x_val0, x_val1))
+# y_val = np.concatenate((y_val0, y_val1))
+
+x_val = x_val0
+y_val = y_val0
 
 print("Reading batch")
 start = time.time()
