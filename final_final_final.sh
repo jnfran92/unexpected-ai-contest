@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# nohup bash ./final_final_final.sh > final_final_final_log_3.out &
+# nohup bash ./final_final_final.sh > model_november_1.out &
 
 source /home/juan_francisco_chango/envs/tf-gpu/bin/activate
 python3 9_1_train_model_rich_cnn_lstm_spanish.py

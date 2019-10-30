@@ -60,23 +60,15 @@ EMBEDDING_DIM = int(MAX_NB_WORDS*(5/5))
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
-model.add(Conv1D(filters=64, kernel_size=8, padding='same', activation='relu'))
-# model.add(GlobalMaxPooling1D())
-model.add(Conv1D(filters=64, kernel_size=4, padding='same', activation='relu'))
-# model.add(GlobalMaxPooling1D())
-model.add(Conv1D(filters=64, kernel_size=2, padding='same', activation='relu'))
+model.add(Conv1D(filters=2048, kernel_size=8, padding='same', activation='relu'))
+model.add(Conv1D(filters=1024, kernel_size=8, padding='same', activation='relu'))
+model.add(GlobalMaxPooling1D())
 
-
-model.add(Dropout(0.5))
-model.add(MaxPooling1D(pool_size=2))
-model.add(Flatten())
-
-model.add(Dense(1024))
+model.add(Dense(2048))
 model.add(Dropout(0.2))
 model.add(Activation('relu'))
 
 model.add(Dense(y_train.shape[1], activation='softmax'))
-
 # adam_opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
