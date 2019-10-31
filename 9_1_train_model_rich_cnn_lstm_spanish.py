@@ -76,7 +76,7 @@ model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accura
 
 print(model.summary())
 
-batch_size_custom = 4096
+batch_size_custom = 1024
 print("batch_size_custom: " + str(batch_size_custom))
 
 # Create Callback
