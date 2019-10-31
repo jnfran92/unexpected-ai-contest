@@ -88,7 +88,7 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
                      epochs=3,
-                     batch_size=8192,
+                     batch_size=3072,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
