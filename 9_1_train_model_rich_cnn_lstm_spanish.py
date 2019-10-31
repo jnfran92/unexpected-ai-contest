@@ -62,7 +62,7 @@ model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=x_train.shape[1]))
 model.add(SpatialDropout1D(0.2))
 model.add(Conv1D(filters=512, kernel_size=2, padding='same', activation='relu'))
 model.add(Conv1D(filters=512, kernel_size=4, padding='same', activation='relu'))
-model.add(Conv1D(filters=512, kernel_size=8, padding='same', activation='relu'))
+# model.add(Conv1D(filters=512, kernel_size=8, padding='same', activation='relu'))
 model.add(GlobalMaxPooling1D())
 
 model.add(Dense(2048))
@@ -88,7 +88,7 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
                      epochs=3,
-                     batch_size=3072,
+                     batch_size=4096,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
 
