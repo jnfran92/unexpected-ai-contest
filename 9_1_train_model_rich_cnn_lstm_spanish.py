@@ -72,9 +72,12 @@ model.add(Activation('relu'))
 
 model.add(Dense(y_train.shape[1], activation='softmax'))
 # adam_opt = Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
 
 print(model.summary())
+
+batch_size_custom = 4096
+print("batch_size_custom: " + str(batch_size_custom))
 
 # Create Callback
 early_stop = EarlyStopping(monitor='val_loss',
@@ -88,17 +91,9 @@ csv_logger = CSVLogger(filename="./logs/" + model_name + str(n_batch) + ".csv")
 fit_data = model.fit(x_train, y_train,
                      validation_data=[x_val, y_val],
                      epochs=3,
-                     batch_size=4096,
+                     batch_size=batch_size_custom,
                      verbose=2,
                      callbacks=[early_stop, csv_logger])
-
-#
-# print('Predicting data-------')
-# pred = model.predict(x_val)
-# df_pred = pd.DataFrame(argmax(pred, 1))
-# df_pred['real'] = argmax(y_val, 1)
-# print('Prediction on Val errors: ' + str(sum(df_pred[0] != df_pred['real'])))
-
 
 # Save model
 print('Saving the Model')
