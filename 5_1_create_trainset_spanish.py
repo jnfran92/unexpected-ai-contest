@@ -81,7 +81,7 @@ X_pre = encoded_seqs_pad_scaled
 
 # Split Data
 batches_path = './train_data/batches/spanish'
-x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.15)
+x_train, x_val, y_train, y_val = train_test_split(X_pre, Y_pre, test_size=0.05)
 
 np.save(batches_path + '/' + 'x_val' + str(0) + '.npy', x_val)
 np.save(batches_path + '/' + 'y_val' + str(0) + '.npy', y_val)
