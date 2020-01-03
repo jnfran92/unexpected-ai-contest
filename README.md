@@ -1,6 +1,9 @@
 # MercadoLibre AI contest
 
-Running on TheBebop Server.
+Submission Scripts for MeLi(Mercado Libre) Machine Learning contest.
+Final score: `0.88487` acc, position `#31`
+
+<img src="https://i.imgur.com/BpDZkmv.png" width="800">
 
 ## Notes
 
