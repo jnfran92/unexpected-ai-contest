@@ -1,7 +1,7 @@
 # MercadoLibre AI contest
 
 Submission Scripts for MeLi(Mercado Libre) Machine Learning contest.
-Final score: `0.88487` acc, position `#31`
+Final score: `0.88487` acc, position `#31` [Final results](https://ml-challenge.mercadolibre.com/final_results)
 
 <img src="https://i.imgur.com/BpDZkmv.png" width="800">
 
